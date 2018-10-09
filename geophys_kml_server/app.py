@@ -11,16 +11,13 @@ from flask_compress import Compress
 from geophys_kml_server import settings, RestfulKMLQuery, RestfulImageQuery, image_url_path
 import logging
 
-logger = logging.getLogger()
-dynamic_kmls_logger = logging.getLogger('geophys_kml_server')
+root_logger = logging.getLogger()
 
 if settings['global_settings']['debug']:
-    logger.setLevel(logging.DEBUG)
-    dynamic_kmls_logger.setLevel(logging.DEBUG)
+    root_logger.setLevel(logging.DEBUG)
 else:
-    logger.setLevel(logging.INFO)
-    dynamic_kmls_logger.setLevel(logging.INFO)
-logger.debug('Logger {} set to level {}'.format(logger.name, logger.level))
+    root_logger.setLevel(logging.INFO)
+root_logger.debug('Root root_logger {} set to level {}'.format(root_logger.name, root_logger.level))
 
 # Compression defaults
 COMPRESS_MIMETYPES = ['application/vnd.google-earth.kml+xml',
@@ -36,7 +33,7 @@ DEFAULT_COMPRESS_MIN_SIZE = 2000 # Don't bother compressing small KML responses
 # Set proxy for outgoing traffic (used for testing with Fiddler)
 http_proxy = settings['global_settings'].get('http_proxy')
 if http_proxy:
-    logger.info('Setting proxy to {}'.format(http_proxy))
+    root_logger.info('Setting proxy to {}'.format(http_proxy))
     os.environ['http_proxy'] = http_proxy
 
 def configure_app_compression(app):
@@ -61,14 +58,14 @@ if settings['global_settings']['http_compression']:
 
 if __name__ == '__main__':
     # Setup logging handlers if required
-    if not logger.handlers:
-        # Set handler for root logger to standard output
+    if not root_logger.handlers:
+        # Set handler for root root_logger to standard output
         console_handler = logging.StreamHandler(sys.stdout)
         #console_handler.setLevel(logging.INFO)
         console_handler.setLevel(logging.DEBUG)
         console_formatter = logging.Formatter('%(message)s')
         console_handler.setFormatter(console_formatter)
-        logger.addHandler(console_handler)
+        root_logger.addHandler(console_handler)
 
     app.run(host=settings['global_settings'].get('host'), 
             debug=settings['global_settings']['debug'])

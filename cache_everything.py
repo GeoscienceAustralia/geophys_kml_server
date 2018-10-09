@@ -25,11 +25,6 @@ def main():
         
         dataset_format = dataset_settings['dataset_format']
 
-        #=======================================================================
-        # if dataset_format != 'line': #TODO: REMOVE THIS - it's only to exclude stuff we already have
-        #     continue
-        #=======================================================================
-        
         if dataset_format not in ['point', 'line', 'grid']:
             continue
         

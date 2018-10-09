@@ -3,6 +3,7 @@
 	<name>geophys_utils</name>
 	<comment></comment>
 	<projects>
+		<project>geophys_utils</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

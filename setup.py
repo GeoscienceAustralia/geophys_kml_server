@@ -16,57 +16,35 @@
 #    limitations under the License.
 #===============================================================================
 from distutils.core import setup
-import os
 
 version = '0.0.0'
 
 setup(name='geophys_utils',
       version=version,
       packages=[
-          'geophys_utils',
-          'geophys_utils.test',
-          'geophys_utils.netcdf_converter',
-          'geophys_utils.dataset_metadata_cache',
-          'dynamic_kmls'
+          'geophys_kml_server'
       ],
-      package_data={'geophys_utils': ['csw_utils_settings.yml'],
-                    'geophys_utils.netcdf_converter': ['aseg_gdf_settings.yml'],
-                    'geophys_utils.dataset_metadata_cache': ['dataset_metadata_cache_settings.yml'],
-                    'dynamic_kmls': ['dynamic_kml_settings.yml']
+      package_data={
+                    'geophys_kml_server': ['geophys_kml_server_settings.yml']
                     },
-      scripts=(['bin/csw_find',
-                'bin/rechunk',
-                'bin/aseg2nc',
-                'bin/nc2aseg',
-                ] 
-               if (os.name == 'posix')
-               else (['bin\\csw_find.bat',
-                      'bin\\rechunk.bat',
-                      'bin\\aseg2nc.bat',
-                      'bin\\nc2aseg.bat',
-                      ] 
-                     if (os.name == 'nt')
-                     else [])),
+      scripts=[],
       requires=[
-            'distutils',
-            'functools',
-            'itertools',
-            'netCDF4',
-            'numpy',
-            'osgeo',
-            'owslib',
-            'scipy',
+            'geophys_utils' # https://github.com/GeoscienceAustralia/geophys_utils
+            'flask',
+            'flask_compress',
+            'flask_restful',
+            'matplotlib',
+            'requests',
             'shapely',
+            'simplekml'
             'tempfile',
-            'unittest',
             'yaml'
-            'unidecode'
             ],
-      url='https://github.com/geoscienceaustralia/geophys_utils',
+      url='https://github.com/geoscienceaustralia/geophys_kml_server',
       author='Alex Ip - Geoscience Australia',
       maintainer='Alex Ip - Geoscience Australia',
       maintainer_email='alex.ip@ga.gov.au',
-      description='Geophysics data access utilities',
-      long_description='Geophysics data access utilities',
-      license='Creative Commons Attribution 4.0 International'
+      description='Dynamic Geophysics KML Server',
+      long_description='Dynamic Geophysics KML Server',
+      license='Apache License Version 2.0'
       )

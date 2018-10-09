@@ -1,3 +1,9 @@
+# Clone the geophys_utils repo (https://github.com/GeoscienceAustralia/geophys_utils) and run the setup.py script
+cd
+git clone https://github.com/GeoscienceAustralia/geophys_utils
+cd geophys_utils
+python setup.py install
+
 # Clone the geophys_kml_server repo (https://github.com/GeoscienceAustralia/geophys_kml_server) under /var/www/html
 cd /var/www/html
 git clone https://github.com/GeoscienceAustralia/geophys_kml_server

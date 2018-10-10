@@ -41,6 +41,10 @@ After installing Apache and all required Python3 dependencies, perform the follo
         cd /var/www/html
         git clone https://github.com/GeoscienceAustralia/geophys_kml_server
 
+**Edit settings file /var/www/html/geophys_kml_server/geophys_kml_server_settings.yml for Linux environment**
+
+        cache_root_dir: /tmp
+
 **Ensure Apache has mod_wsgi installed**
 
         sudo a2enmod wsgi

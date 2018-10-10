@@ -6,12 +6,21 @@ global_settings:
   http_compression: true # Set this to false for local use, true for remote
   compress_level: 6 # 6 = Maximum compression level
   compress_min_size: 2000 # Don't bother compressing small KML responses
-  database_engine: SQLite # SQLite or Postgres
   # Define number of line segments to show across bounding box height for line sub-sampling
   line_segments_across_bbox: 50 # Maximum number of line segments to show across bounding box
   cache_root_dir: 'C:\Temp' # Root directory for disk cache (if enabled)
   #host: '0.0.0.0' # Comment this out for normal local host testing
   #http_proxy: 'http://127.0.0.1:8888' # Comment this out for normal local host testing
+  database_engine: SQLite # SQLite or Postgres
+  database_settings: # Settings for different database engines (constructor parameters)
+    SQLite:
+      sqlite_path: "data/dataset_metadata_cache.sqlite"
+    Postgres:
+      postgres_host: "localhost"
+      postgres_port: 5432
+      postgres_dbname: "dataset_metadata_cache"
+      postgres_user: "db_user"
+      postgres_password: "db_password"    
 
 # Default dataset settings
 default_dataset_settings:

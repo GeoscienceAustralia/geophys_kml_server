@@ -68,5 +68,6 @@ if __name__ == '__main__':
         root_logger.addHandler(console_handler)
 
     app.run(host=settings['global_settings'].get('host'), 
-            debug=settings['global_settings']['debug'])
+            debug=settings['global_settings']['debug'],
+            use_reloader=False)
 

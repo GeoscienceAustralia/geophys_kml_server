@@ -38,7 +38,8 @@ class RestfulKMLQuery(Resource):
         super(RestfulKMLQuery, self).__init__()
         
         self.sdmc = get_dataset_metadata_cache(db_engine=settings['global_settings']['database_engine'], 
-                                               debug=settings['global_settings']['debug'])
+                                               debug=settings['global_settings']['debug'],
+                                               **(settings['global_settings']['database_settings'][settings['global_settings']['database_engine']]))
 
             
             

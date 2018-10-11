@@ -13,6 +13,16 @@ import logging
 
 root_logger = logging.getLogger()
 
+log_file = settings['global_settings'].get('log_file')
+if log_file:
+    # Set handler for root root_logger to standard output
+    file_handler = logging.FileHandler(log_file)
+    #file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter('%(message)s')
+    file_handler.setFormatter(file_formatter)
+    root_logger.addHandler(file_handler)
+
 if settings['global_settings']['debug']:
     root_logger.setLevel(logging.DEBUG)
 else:

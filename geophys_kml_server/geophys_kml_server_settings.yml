@@ -1,6 +1,7 @@
 # Global settings
 global_settings:
   debug: false
+  log_file: null #'/tmp/kml_server.log'
   cache_images: true # Set this to false to get images from NCI WMS endpoints
   cache_coordinates: true # Set this to true to cache coordinates and lines on local disk
   http_compression: true # Set this to false for local use, true for remote

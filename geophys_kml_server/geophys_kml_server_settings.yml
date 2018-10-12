@@ -5,7 +5,7 @@ global_settings:
   cache_images: true # Set this to false to get images from NCI WMS endpoints
   cache_coordinates: true # Set this to true to cache coordinates and lines on local disk
   http_compression: true # Set this to false for local use, true for remote
-  compress_level: 6 # 6 = Maximum compression level
+  compress_level: 6 # 6 = Maximum HTTP compression level
   compress_min_size: 2000 # Don't bother compressing small KML responses
   # Define number of line segments to show across bounding box height for line sub-sampling
   line_segments_across_bbox: 50 # Maximum number of line segments to show across bounding box
@@ -76,7 +76,7 @@ dataset_settings:
     line_width: 5
     protocol: opendap
     dataset_link: http://dapds00.nci.org.au/thredds/catalog/uc0/rr2_dev/axi547/aem/catalog.html?dataset=uc0/rr2_dev/axi547/aem/{netcdf_basename}
-    height_variable: lidar # Do not set this value for 2D coordinates
+    height_variables: [lidar, altimeter] # Search list of variables for height - do not set this value for 2D coordinates
     colormap_name: rainbow
     color_count: 256
     timestamp_detail_view: true

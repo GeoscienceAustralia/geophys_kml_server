@@ -240,12 +240,16 @@ class NetCDF2kmlConverter(object):
         # Compute segment length as a proportion of the height of bounding box
         subsampling_distance = (bounding_box[3] - bounding_box[1]) / self.line_segments_across_bbox
         
-        # If height variable defined and existing in dataset
-        if self.height_variable and self.height_variable in line_utils.netcdf_dataset.variables.keys():
-            height_variable = self.height_variable # e.g. 'lidar'
-        else:
-            height_variable = [] # Empty string to return no variables, just 'coordinates'
-        
+        # If height variables searchlist defined and not None
+        variable_list = [] # Empty string to return no variables, just 'coordinates'
+        if hasattr(self, 'height_variables') and self.height_variables:
+            for height_variable in self.height_variables:
+                if height_variable in line_utils.netcdf_dataset.variables.keys():
+                    variable_list = [height_variable]
+                    break
+                else:
+                    height_variable = None
+                  
         #dataset_folder_kml.style = self.dataset_type_folder.style
         #dataset_folder_kml.style = self.line_style
     
@@ -253,10 +257,10 @@ class NetCDF2kmlConverter(object):
         
         visible_line_count = 0
         for line_number, line_data in line_utils.get_lines(line_numbers=None, 
-                                                                variables=height_variable, 
-                                                                bounds=bounding_box,
-                                                                subsampling_distance=subsampling_distance
-                                                                ):
+                                                           variables=variable_list, 
+                                                           bounds=bounding_box,
+                                                           subsampling_distance=subsampling_distance
+                                                           ):
             #logger.debug("line_number: {}".format(line_number))
             #logger.debug("line_data: {}".format(line_data))
             points_in_subset = len(line_data['coordinates'])

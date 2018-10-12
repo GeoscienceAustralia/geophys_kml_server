@@ -240,7 +240,8 @@ class NetCDF2kmlConverter(object):
         # Compute segment length as a proportion of the height of bounding box
         subsampling_distance = (bounding_box[3] - bounding_box[1]) / self.line_segments_across_bbox
         
-        if self.height_variable:
+        # If height variable defined and existing in dataset
+        if self.height_variable and self.height_variable in line_utils.netcdf_dataset.variables.keys():
             height_variable = self.height_variable # e.g. 'lidar'
         else:
             height_variable = [] # Empty string to return no variables, just 'coordinates'
@@ -275,7 +276,7 @@ class NetCDF2kmlConverter(object):
 
                 line_string.style = self.line_style               
                 
-                if self.height_variable: # 3D
+                if height_variable: # 3D
                     subset_array = np.zeros(shape=(points_in_subset, 3), dtype=line_data['coordinates'].dtype)
                     # Populate coords_3d_array with (x,y,z) coordinates
                     subset_array[:,0:2] = line_data['coordinates']      

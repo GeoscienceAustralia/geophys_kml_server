@@ -27,19 +27,24 @@ The content of this repository is licensed for use under the [Apache 2.0 License
 <https://orcid.org/0000-0001-5085-8783>
 
 ## Deployment Instructions
-After installing Apache and all required Python3 dependencies, perform the following tasks as the root user:
+After installing Apache and all required Python3 dependencies, perform the following tasks as the __root user__:
 
+**Become the root user**
+
+        sudo su -
+        
 **Clone the geophys_utils repo (https://github.com/GeoscienceAustralia/geophys_utils) and run the setup.py script to install the geophys_utils dependency**
 
         cd
         git clone https://github.com/GeoscienceAustralia/geophys_utils
         cd geophys_utils
-        python setup.py install
+        python3 setup.py install
 
 **Clone this geophys_kml_server repo (https://github.com/GeoscienceAustralia/geophys_kml_server) under /var/www/html**
 
         cd /var/www/html
         git clone https://github.com/GeoscienceAustralia/geophys_kml_server
+N.B: Do NOT run the setup.py script. You will be running this code from this directory without having to install this module to the system.
 
 **Edit settings file /var/www/html/geophys_kml_server/geophys_kml_server_settings.yml for Linux environment**
 
@@ -47,7 +52,7 @@ After installing Apache and all required Python3 dependencies, perform the follo
 
 **Ensure Apache has mod_wsgi installed**
 
-        sudo a2enmod wsgi
+        a2enmod wsgi
 
 **Add the following lines to Apache configuration file (usually /etc/apache2/sites-available/000-default.conf):**
 
@@ -63,4 +68,4 @@ After installing Apache and all required Python3 dependencies, perform the follo
 
 **Reload Apache**
 
-        sudo service apache2 reload
+        service apache2 reload

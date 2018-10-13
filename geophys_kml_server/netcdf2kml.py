@@ -231,16 +231,19 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         '''
+        cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+        
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'], 
-                                               enable_disk_cache=self.cache_coordinates,
-                                               enable_memory_cache=True,
-                                               cache_dir=self.cache_dir,
-                                               debug=self.debug
-                                               )        
+                                     enable_disk_cache=self.cache_coordinates,
+                                     enable_memory_cache=True,
+                                     cache_path=cache_path,
+                                     debug=self.debug
+                                     )        
         # Compute segment length as a proportion of the height of bounding box
         subsampling_distance = (bounding_box[3] - bounding_box[1]) / self.line_segments_across_bbox
         
         # If height variables searchlist defined and not None
+        height_variable = None
         variable_list = [] # Empty string to return no variables, just 'coordinates'
         if hasattr(self, 'height_variables') and self.height_variables:
             for height_variable in self.height_variables:
@@ -330,7 +333,7 @@ class NetCDF2kmlConverter(object):
             else:
                 logger.debug("line doesn't have any points in view")
            
-        line_utils.netcdf_dataset.close() # Explicitly close netCDF file
+        line_utils.close() # Explicitly close netCDF file
         
         if visible_line_count:
             dataset_folder_kml.name = dataset_folder_kml.name + ' ({} lines in view)'.format(visible_line_count)
@@ -347,10 +350,12 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         """        
+        cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+        
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'], 
                                        enable_disk_cache=self.cache_coordinates, 
                                        enable_memory_cache=True,
-                                       cache_dir=self.cache_dir,
+                                       cache_path=cache_path,
                                        debug=self.debug
                                        )
         
@@ -425,7 +430,7 @@ class NetCDF2kmlConverter(object):
             if variant_point_style:
                 point_kml.style = variant_point_style
                 
-        point_utils.netcdf_dataset.close() # Explicitly close netCDF file
+        point_utils.close() # Explicitly close netCDF file
 
         dataset_folder_kml.region = self.build_region(dataset_metadata_dict, 100, -1, 200, 800)
         

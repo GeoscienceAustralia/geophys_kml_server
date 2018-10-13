@@ -7,21 +7,36 @@ Hacky utility to cache EVERYTHING from OPeNDAP & WMS endpoints.
 WARNING: This will take some time to run to completion and consume a considerable amount of bandwidth. Do NOT try this at home.
 '''
 import os
+import sys
 import tempfile
+import re
 from geophys_kml_server import settings
 from geophys_utils.dataset_metadata_cache import get_dataset_metadata_cache
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
+import logging
+
+root_logger = logging.getLogger()
 
 bbox_list = [-180.0, -90.0, 180.0, 90.0] # Get everything regardless of spatial position
 
 netcdf_util_subclass={'point': NetCDFPointUtils, 'line': NetCDFLineUtils} # Subclasses keyed by dataset_format
+
+# Set proxy for outgoing traffic (used for testing with Fiddler)
+http_proxy = settings['global_settings'].get('http_proxy')
+if http_proxy:
+    root_logger.info('Setting proxy to {}'.format(http_proxy))
+    os.environ['http_proxy'] = http_proxy
 
 def main():
     dataset_metadata_cache = get_dataset_metadata_cache(db_engine=settings['global_settings']['database_engine'], 
                                                         debug=settings['global_settings']['debug'])
     
     for dataset_type, dataset_settings in settings['dataset_settings'].items():
+        
+        #TODO: Remove this - it's only to exclude things we've already done
+        if dataset_type in ['ground_gravity']:
+            continue
         
         dataset_format = dataset_settings['dataset_format']
 
@@ -44,6 +59,18 @@ def main():
         
         
         for dataset_metadata_dict in dataset_metadata_dict_list:
+            dataset_metadata_dict['netcdf_path'] = modify_nc_path(dataset_settings.get('netcdf_path_prefix'), 
+                                                                  str(dataset_metadata_dict['distribution_url']))
+            dataset_metadata_dict['netcdf_basename'] = os.path.basename(dataset_metadata_dict['netcdf_path'])
+                                  
+            #===================================================================
+            # dataset_link = dataset_settings.get('dataset_link')
+            # if dataset_link:
+            #     for key, value in dataset_metadata_dict.items():
+            #         dataset_link = dataset_link.replace('{'+key+'}', str(value))
+            # dataset_metadata_dict['dataset_link'] = dataset_link
+            #===================================================================
+            
             distribution_url = dataset_metadata_dict['distribution_url']
             
             if dataset_format == 'grid':
@@ -84,13 +111,16 @@ def main():
             # Points and lines handled below
             
             try:
-                print('\tOpening {}'.format(distribution_url))
+                print('\tCaching data for {} dataset {}'.format(dataset_format, distribution_url))
+                
+                cache_path=os.path.join(cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
                 
                 netcdf_util = netcdf_util_subclass[dataset_format](distribution_url, 
                      enable_disk_cache=True,
                      enable_memory_cache=True,
-                     cache_dir=cache_dir,
-                     debug=settings['global_settings']['debug'])
+                     cache_path=cache_path,
+                     debug=settings['global_settings']['debug']
+                     )
                 
                 print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 
@@ -101,6 +131,24 @@ def main():
             except BaseException as e:
                 print('\t\tUnable to cache data for {}: {}'.format(distribution_url, e))
     
+def modify_nc_path(netcdf_path_prefix, opendap_endpoint):    
+    '''
+    Helper function to substitute netcdf_path_prefix in netcdf_path if defined
+    '''
+    if netcdf_path_prefix:
+        return os.path.join(netcdf_path_prefix, os.path.basename(opendap_endpoint))
+    else:
+        return opendap_endpoint
 
 if __name__ == '__main__':
+    # Setup logging handlers if required
+    if not root_logger.handlers:
+        # Set handler for root root_logger to standard output
+        console_handler = logging.StreamHandler(sys.stdout)
+        #console_handler.setLevel(logging.INFO)
+        console_handler.setLevel(logging.DEBUG)
+        console_formatter = logging.Formatter('%(message)s')
+        console_handler.setFormatter(console_formatter)
+        root_logger.addHandler(console_handler)
+
     main()

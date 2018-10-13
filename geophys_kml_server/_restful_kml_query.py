@@ -78,7 +78,7 @@ class RestfulKMLQuery(Resource):
         # Add calculated values to each dataset_metadata_dict in list
         for dataset_metadata_dict in dataset_metadata_dict_list:
             # Insert modified netCDF file path
-            dataset_metadata_dict['netcdf_path'] = self.modify_nc_path(dataset_settings['netcdf_path_prefix'], 
+            dataset_metadata_dict['netcdf_path'] = self.modify_nc_path(dataset_settings.get('netcdf_path_prefix'), 
                                                                        str(dataset_metadata_dict['distribution_url']))
             dataset_metadata_dict['netcdf_basename'] = os.path.basename(dataset_metadata_dict['netcdf_path'])
                                   

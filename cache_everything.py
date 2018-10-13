@@ -34,9 +34,11 @@ def main():
     
     for dataset_type, dataset_settings in settings['dataset_settings'].items():
         
-        #TODO: Remove this - it's only to exclude things we've already done
-        if dataset_type in ['ground_gravity']:
-            continue
+        #=======================================================================
+        # #TODO: Remove this - it's only to exclude things we've already done
+        # if dataset_type in ['ground_gravity']:
+        #     continue
+        #=======================================================================
         
         dataset_format = dataset_settings['dataset_format']
 

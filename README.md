@@ -26,6 +26,20 @@ The content of this repository is licensed for use under the [Apache 2.0 License
 <andrew.turner@ga.gov.au>  
 <https://orcid.org/0000-0001-5085-8783>
 
+
+## Python3 Dependencies
+The following Python3 packages are required by geophys\_kml\_server:
+- geophys\_utils (https://github.com/GeoscienceAustralia/geophys\_utils)
+- flask
+- flask_compress
+- flask_restful
+- matplotlib
+- requests
+- shapely
+- simplekml
+- tempfile
+- yaml
+            
 ## Deployment Instructions
 After installing Apache and all required Python3 dependencies, perform the following tasks as the __root user__:
 
@@ -44,7 +58,7 @@ After installing Apache and all required Python3 dependencies, perform the follo
 
         cd /var/www/html
         git clone https://github.com/GeoscienceAustralia/geophys_kml_server
-N.B: Do NOT run the setup.py script. You will be running this code from this directory without having to install this module to the system.
+N.B: You will be running this code direclty from the /var/www/html/geophys\_kml\_server directory.
 
 **Edit settings file /var/www/html/geophys_kml_server/geophys_kml_server_settings.yml for Linux environment**
 

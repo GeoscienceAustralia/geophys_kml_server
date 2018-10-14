@@ -3,7 +3,7 @@ The geophys\_kml\_server Python module implements a Flask KML server for geophys
 
 This application requires the geophys\_utils Python libraries available at <https://github.com/GeoscienceAustralia/geophys_utils>.
 
-Details on the netCDF encoding for point and line data can be viewed at <https://docs.google.com/document/d/1C-SsT1vOcAaPT_4jdY1S_NjUjbk-WbUjb1FCw7uPrxw/edit?usp=sharing>
+Details on the netCDF encoding for point and line geophysics data can be viewed at <https://docs.google.com/document/d/1C-SsT1vOcAaPT_4jdY1S_NjUjbk-WbUjb1FCw7uPrxw/edit?usp=sharing>
 
 Feedback, suggestions or contributions will be gratefully accepted.
 
@@ -29,7 +29,7 @@ The content of this repository is licensed for use under the [Apache 2.0 License
 
 ## Python3 Dependencies
 The following Python3 packages are required by geophys\_kml\_server:
-- geophys\_utils (https://github.com/GeoscienceAustralia/geophys\_utils)
+- geophys\_utils (https://github.com/GeoscienceAustralia/geophys_utils)
 - flask
 - flask_compress
 - flask_restful

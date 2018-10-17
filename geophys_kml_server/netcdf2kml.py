@@ -179,7 +179,7 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         """
         if parent_folder is None:
-            parent_folder=self.dataset_type_folder
+            parent_folder = self.dataset_type_folder
         if polygon_name is None:
             polygon_name = str(dataset_metadata_dict['dataset_title'])
 

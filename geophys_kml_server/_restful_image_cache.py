@@ -103,7 +103,8 @@ def cache_image_file(dataset_type, image_basename, image_source_url):
     response = requests.get(image_source_url, stream=True)
 
     if settings['global_settings']['memchaced_endpoint']:
-        response = requests.get(image_source_url, stream=True)
+        print(settings['global_settings']['memchaced_endpoint'])
+        #response = requests.get(image_source_url, stream=True)
 
         print(image_path)
     else:

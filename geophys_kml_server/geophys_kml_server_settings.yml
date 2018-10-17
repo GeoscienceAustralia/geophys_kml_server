@@ -10,7 +10,7 @@ global_settings:
   compress_min_size: 2000 # Don't bother compressing small KML responses
   # Define number of line segments to show across bounding box height for line sub-sampling
   line_segments_across_bbox: 50 # Maximum number of line segments to show across bounding box
-  cache_root_dir: 'C:\Temp' # Root directory for disk cache (if enabled)
+  cache_root_dir: '/tmp' # Root directory for disk cache (if enabled)
   #host: '0.0.0.0' # Comment this out for normal local host testing
   #http_proxy: 'http://127.0.0.1:8888' # Comment this out for normal local host testing
   database_engine: SQLite # SQLite or Postgres

@@ -9,7 +9,7 @@ import tempfile
 import requests
 from flask import request, make_response, send_from_directory
 from flask_restful import Resource
-import memcache
+
 
 from geophys_kml_server import settings
 import logging
@@ -33,7 +33,7 @@ cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
 os.makedirs(cache_dir, exist_ok=True)
 
 
-mc = memcache.Client(['kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211'], debug=0)
+
 
 class RestfulImageQuery(Resource):
     '''
@@ -104,7 +104,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url):
 
     if settings['global_settings']['memchaced_endpoint']:
         response = requests.get(image_source_url, stream=True)
-        mc.set(image_path, response)
+
         print(image_path)
     else:
 

@@ -29,6 +29,7 @@ import os
 import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
+import memcache
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -358,7 +359,10 @@ class NetCDF2kmlConverter(object):
                                        cache_path=cache_path,
                                        debug=self.debug
                                        )
-        
+
+        mc = memcache.Client(['kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211'], debug=0)
+        mc.set('script_test', 'test_value')
+
         spatial_mask = point_utils.get_spatial_mask(bounding_box)
         #logger.debug('spatial_mask: {}'.format(spatial_mask))
         if not np.any(spatial_mask):

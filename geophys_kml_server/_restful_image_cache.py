@@ -106,23 +106,24 @@ def cache_image_file(dataset_type, image_basename, image_source_url):
         response = requests.get(image_source_url, stream=True)
         mc.set(image_path, response)
         print(image_path)
+    else:
 
-    if not os.path.isfile(image_path):
-        os.makedirs(image_dir, exist_ok=True)
-        logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
-        response = requests.get(image_source_url, stream=True)
-        if response.status_code == 200:
-            with open(image_path, 'wb') as image_file:
-                for chunk in response:
-                    image_file.write(chunk)
+        if not os.path.isfile(image_path):
+            os.makedirs(image_dir, exist_ok=True)
+            logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
+            response = requests.get(image_source_url, stream=True)
+            if response.status_code == 200:
+                with open(image_path, 'wb') as image_file:
+                    for chunk in response:
+                        image_file.write(chunk)
 
-        else:
-            logger.debug('response.status_code {}'.format(response.status_code))
-            return
-        
+            else:
+                logger.debug('response.status_code {}'.format(response.status_code))
+                return
+
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
-    
+
     return cached_image_url_path
 
 

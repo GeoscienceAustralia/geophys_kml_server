@@ -49,7 +49,13 @@ class NetCDF2kmlConverter(object):
         # Initialise and set debug property
         self._debug = None
         self.debug = debug
-        
+
+        if settings['global_settings']['memcached_endpoint']:
+            self.memcache_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        else:
+            self.memcache_connection = None
+
+
         self.url_root = url_root
         
         self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 
@@ -353,7 +359,8 @@ class NetCDF2kmlConverter(object):
         """        
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         
-        point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'], 
+        point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
+                                       memcached_connection=self.memcache_connection,
                                        enable_disk_cache=self.cache_coordinates, 
                                        enable_memory_cache=True,
                                        cache_path=cache_path,

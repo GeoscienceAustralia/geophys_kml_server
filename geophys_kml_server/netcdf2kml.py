@@ -363,7 +363,7 @@ class NetCDF2kmlConverter(object):
                                        memcached_connection=self.memcache_connection,
                                        enable_disk_cache=self.cache_coordinates, 
                                        enable_memory_cache=True,
-                                       cache_path=cache_path,
+                                       cache_dir=cache_path,
                                        debug=self.debug
                                        )
 

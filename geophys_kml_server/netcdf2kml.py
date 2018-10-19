@@ -50,10 +50,13 @@ class NetCDF2kmlConverter(object):
         self._debug = None
         self.debug = debug
 
-        if settings['global_settings']['memcached_endpoint']:
-            self.memcache_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        else:
-            self.memcache_connection = None
+        # if settings['global_settings']['memcached_endpoint']:
+        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        # else:
+        #     self.memcached_connection = None
+        self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+
+        self.memcached_connection.set("TEST1", "from_script")
 
 
         self.url_root = url_root
@@ -360,7 +363,7 @@ class NetCDF2kmlConverter(object):
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
-                                       memcached_connection=self.memcache_connection,
+                                       memcached_connection=self.memcached_connection,
                                        enable_disk_cache=None, #self.cache_coordinates,
                                        enable_memory_cache=False,
                                        cache_dir=None, #cache_path,

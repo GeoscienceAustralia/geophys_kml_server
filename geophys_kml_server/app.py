@@ -13,6 +13,16 @@ import logging
 
 root_logger = logging.getLogger()
 
+
+import sys
+sys.stdout = open('/tmp/output.logs', 'w')
+print('Hello World!')  # Nothing appears bellow
+sys.stdout = sys.__stdout__   # Reset to the standard output
+open('output.logs', 'r').read()
+'Hello World!\n'
+
+
+
 log_file = settings['global_settings'].get('log_file')
 if log_file:
     # Set handler for root root_logger to standard output

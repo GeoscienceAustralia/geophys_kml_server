@@ -361,9 +361,9 @@ class NetCDF2kmlConverter(object):
         
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
                                        memcached_connection=self.memcache_connection,
-                                       enable_disk_cache=self.cache_coordinates, 
-                                       enable_memory_cache=True,
-                                       cache_dir=cache_path,
+                                       enable_disk_cache=None, #self.cache_coordinates,
+                                       enable_memory_cache=False,
+                                       cache_dir=None, #cache_path,
                                        debug=self.debug
                                        )
 

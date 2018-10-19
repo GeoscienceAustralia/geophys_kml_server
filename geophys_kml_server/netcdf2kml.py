@@ -30,6 +30,7 @@ import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import memcache
+import sys
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -57,7 +58,7 @@ class NetCDF2kmlConverter(object):
         self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
 
         self.memcached_connection.set("TEST1", "from_script")
-
+        sys.stderr.write('HEEEEEYYY')
 
         self.url_root = url_root
         
@@ -444,7 +445,7 @@ class NetCDF2kmlConverter(object):
             if variant_point_style:
                 point_kml.style = variant_point_style
                 
-        point_utils.close() # Explicitly close netCDF file
+        point_utils.close()  # Explicitly close netCDF file
 
         dataset_folder_kml.region = self.build_region(dataset_metadata_dict, 100, -1, 200, 800)
         

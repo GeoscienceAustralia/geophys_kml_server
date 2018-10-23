@@ -244,7 +244,8 @@ class NetCDF2kmlConverter(object):
         '''
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         
-        line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'], 
+        line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
+                                     memcached_connection=self.memcached_connection,
                                      enable_disk_cache=self.cache_coordinates,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,

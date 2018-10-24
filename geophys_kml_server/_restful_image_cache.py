@@ -152,13 +152,14 @@ def cache_image_file(dataset_type, image_basename, image_source_url, memcached_c
     image_path = os.path.join(image_dir, image_basename)
     
     if memcache and memcached_connection:
-        status_code, buffer = get_image_buffer(image_source_url)
-        if status_code == 200 and buffer is not None:
-            logger.debug('Writing image to memcached with key {}'.format(image_path))
-            memcached_connection.set(image_path, buffer.read())
-        else:
-            logger.debug('response status_code {}'.format(status_code))
-            return
+        if memcached_connection.get(image_path) is None: #TODO: Determine whether we can check for object existence without retrieving it
+            status_code, buffer = get_image_buffer(image_source_url)
+            if status_code == 200 and buffer is not None:
+                logger.debug('Writing image to memcached with key {}'.format(image_path))
+                memcached_connection.set(image_path, buffer.read())
+            else:
+                logger.debug('response status_code {}'.format(status_code))
+                return
 
     elif not os.path.isfile(image_path):
         os.makedirs(image_dir, exist_ok=True)

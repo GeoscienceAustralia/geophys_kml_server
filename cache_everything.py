@@ -115,7 +115,7 @@ def main():
                       
                 print('\tCaching image {} from {}'.format(image_basename, wms_url))
 
-                cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url)
+                cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, memcached_connection)
                 
                 print('\t\tImage URL: {}'.format(cached_image_url_path))
                 

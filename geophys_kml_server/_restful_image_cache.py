@@ -10,7 +10,6 @@ import requests
 from flask import request, make_response, send_from_directory
 from flask_restful import Resource
 
-
 from geophys_kml_server import settings
 import logging
 #from pprint import pformat
@@ -74,7 +73,6 @@ class RestfulImageQuery(Resource):
         
         image_path = os.path.join(image_dir, image_basename)
         logger.debug('image_path: {}'.format(image_path))
-        image_response = mc.get(image_path)
         if os.path.isfile(image_path):
             image_response = send_from_directory(image_dir, image_basename)
             logger.debug('image_response: {}'.format(image_response))

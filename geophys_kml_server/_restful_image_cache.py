@@ -165,7 +165,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, memcached_c
             logger.debug('response status_code {}'.format(status_code))
             return
 
-    cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path) + '?image=' + image_basename
+    cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
 
     return cached_image_url_path

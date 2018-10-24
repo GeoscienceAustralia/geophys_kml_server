@@ -7,8 +7,9 @@ import os
 import re
 import tempfile
 import requests
-from flask import request, make_response, send_from_directory
+from flask import request, make_response, send_from_directory, send_file
 from flask_restful import Resource
+from io import BytesIO
 
 from geophys_kml_server import settings
 import logging
@@ -16,6 +17,12 @@ import logging
 
 logger = logging.getLogger(__name__)
     
+try:
+    import memcache
+except ModuleNotFoundError:
+    logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
+    memcache = None
+
 if settings['global_settings']['debug']:
     logger.setLevel(logging.DEBUG)
 else:
@@ -40,13 +47,17 @@ class RestfulImageQuery(Resource):
     '''
     CONTENT_TYPE = 'image/png'
 
-    #===========================================================================
-    # def __init__(self):
-    #     '''
-    #     RestfulImageQuery Constructor
-    #     '''
-    #     super(RestfulImageQuery, self).__init__()
-    #===========================================================================
+    def __init__(self):
+        '''
+        RestfulImageQuery Constructor
+        '''
+        super(RestfulImageQuery, self).__init__()
+        
+        if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
+            self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        else:
+            self.memcached_connection = None
+
         
             
             
@@ -73,19 +84,43 @@ class RestfulImageQuery(Resource):
         
         image_path = os.path.join(image_dir, image_basename)
         logger.debug('image_path: {}'.format(image_path))
-        if os.path.isfile(image_path):
-            image_response = send_from_directory(image_dir, image_basename)
-            logger.debug('image_response: {}'.format(image_response))
-            response = make_response(image_response)
-            response.headers['content-type'] = RestfulImageQuery.CONTENT_TYPE
-            return response
+        
+        if self.memcached_connection:
+            #TODO: Finish implementing memcached to HTML here
+            png_cache_key = os.path.join(image_dir, image_basename)
+            png_object = self.memcached_connection.get(png_cache_key) 
+            if png_object is not None:
+                buffer = BytesIO()
+                buffer.write(png_object)
+                buffer.seek(0)
+                return send_file(buffer,
+                                 attachment_filename=image_basename,
+                                 mimetype=RestfulImageQuery.CONTENT_TYPE
+                                 )
+            else:
+                #TODO: Craft a proper response for bad query - 404 perhaps?
+                logger.debug('Image key {} does not exist'.format(image_path))
+                return
+        
+        elif os.path.isfile(image_path):
+            #===================================================================
+            # image_response = send_from_directory(image_dir, image_basename)
+            # logger.debug('image_response: {}'.format(image_response))
+            # response = make_response(image_response)
+            # response.headers['content-type'] = RestfulImageQuery.CONTENT_TYPE
+            # return response
+            #===================================================================
+            return send_file(image_path,
+                             attachment_filename=image_basename,
+                             mimetype=RestfulImageQuery.CONTENT_TYPE
+                             )
         else:
             #TODO: Craft a proper response for bad query - 404 perhaps?
             logger.debug('Image file {} does not exist'.format(image_path))
             return
 
 
-def cache_image_file(dataset_type, image_basename, image_source_url):
+def cache_image_file(dataset_type, image_basename, image_source_url, memcached_connection=None):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path
@@ -93,22 +128,46 @@ def cache_image_file(dataset_type, image_basename, image_source_url):
     @param image_source_url: Source URL for image (probably WMS query)
     @return cached_image_url_path: URL path to cached image. Will be appended to server string
     '''
+    def get_image_buffer(image_source_url):
+        '''
+        Helper function to return an in-memory buffer containing the requested image, or None for failure
+        '''
+        buffer = None
+        response = requests.get(image_source_url, stream=True)
+        if response.status_code == 200:
+            buffer = BytesIO()
+            
+            with buffer:
+                for chunk in response:
+                    buffer.write(chunk)
+                    
+            buffer.seek(0)
+            
+        return response.status_code, buffer
+        
     logger.debug('dataset_type: {}'.format(dataset_type))
 
     image_dir = os.path.join(cache_dir, dataset_type)
 
     image_path = os.path.join(image_dir, image_basename)
+    
+    if memcache and memcached_connection:
+        status_code, buffer = get_image_buffer(image_source_url)
+        if status_code == 200 and buffer is not None:
+            memcached_connection.add(image_path, buffer.read())
+        else:
+            logger.debug('response status_code {}'.format(status_code))
+            return
 
-    if not os.path.isfile(image_path):
+    elif not os.path.isfile(image_path):
         os.makedirs(image_dir, exist_ok=True)
         logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
-        response = requests.get(image_source_url, stream=True)
-        if response.status_code == 200:
+        status_code, buffer = get_image_buffer(image_source_url)
+        if status_code == 200 and buffer is not None:
             with open(image_path, 'wb') as image_file:
-                for chunk in response:
-                    image_file.write(chunk)
+                image_file.write(buffer.read())
         else:
-            logger.debug('response.status_code {}'.format(response.status_code))
+            logger.debug('response status_code {}'.format(status_code))
             return
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path) + '?image=' + image_basename

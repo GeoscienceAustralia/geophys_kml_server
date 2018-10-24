@@ -138,9 +138,8 @@ def cache_image_file(dataset_type, image_basename, image_source_url, memcached_c
         if response.status_code == 200:
             buffer = BytesIO()
             
-            with buffer:
-                for chunk in response:
-                    buffer.write(chunk)
+            for chunk in response:
+                buffer.write(chunk)
                     
             buffer.seek(0)
             

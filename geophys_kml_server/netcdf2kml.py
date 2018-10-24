@@ -29,11 +29,16 @@ import os
 import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
-import memcache
 import sys
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+try:
+    import memcache
+except ModuleNotFoundError:
+    logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
+    memcache = None
 
 class NetCDF2kmlConverter(object):
     '''
@@ -51,14 +56,10 @@ class NetCDF2kmlConverter(object):
         self._debug = None
         self.debug = debug
 
-        # if settings['global_settings']['memcached_endpoint']:
-        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        # else:
-        #     self.memcached_connection = None
-        self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-
-        self.memcached_connection.set("TEST1", "from_script")
-        sys.stderr.write('HEEEEEYYY')
+        if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
+            self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        else:
+            self.memcached_connection = None
 
         self.url_root = url_root
         
@@ -371,9 +372,6 @@ class NetCDF2kmlConverter(object):
                                        cache_path=cache_path,
                                        debug=self.debug
                                        )
-
-        mc = memcache.Client(['kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211'], debug=0)
-        mc.set('script_test', 'test_value')
 
         spatial_mask = point_utils.get_spatial_mask(bounding_box)
         #logger.debug('spatial_mask: {}'.format(spatial_mask))

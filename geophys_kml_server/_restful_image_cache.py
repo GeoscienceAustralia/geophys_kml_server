@@ -133,6 +133,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, memcached_c
         Helper function to return an in-memory buffer containing the requested image, or None for failure
         '''
         buffer = None
+        logger.debug('Retrieving image from {}'.format(image_source_url))
         response = requests.get(image_source_url, stream=True)
         if response.status_code == 200:
             buffer = BytesIO()
@@ -154,16 +155,17 @@ def cache_image_file(dataset_type, image_basename, image_source_url, memcached_c
     if memcache and memcached_connection:
         status_code, buffer = get_image_buffer(image_source_url)
         if status_code == 200 and buffer is not None:
-            memcached_connection.add(image_path, buffer.read())
+            logger.debug('Writing image to memcached with key {}'.format(image_path))
+            memcached_connection.set(image_path, buffer.read())
         else:
             logger.debug('response status_code {}'.format(status_code))
             return
 
     elif not os.path.isfile(image_path):
         os.makedirs(image_dir, exist_ok=True)
-        logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
         status_code, buffer = get_image_buffer(image_source_url)
         if status_code == 200 and buffer is not None:
+            logger.debug('Saving image to {}'.format(image_path))
             with open(image_path, 'wb') as image_file:
                 image_file.write(buffer.read())
         else:

@@ -85,8 +85,8 @@ class RestfulImageQuery(Resource):
             #TODO: Craft a proper response for bad query - 404 perhaps?
             logger.debug('Image file {} does not exist'.format(image_path))
             return
-        
-        
+
+
 def cache_image_file(dataset_type, image_basename, image_source_url):
     '''
     Function to retrieve image from image_source_url, and save it into file
@@ -100,31 +100,24 @@ def cache_image_file(dataset_type, image_basename, image_source_url):
     image_dir = os.path.join(cache_dir, dataset_type)
 
     image_path = os.path.join(image_dir, image_basename)
-    response = requests.get(image_source_url, stream=True)
 
-    if settings['global_settings']['memchaced_endpoint']:
-        print(settings['global_settings']['memchaced_endpoint'])
-        #response = requests.get(image_source_url, stream=True)
-
-        print(image_path)
-    else:
-
-        if not os.path.isfile(image_path):
-            os.makedirs(image_dir, exist_ok=True)
-            logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
-            response = requests.get(image_source_url, stream=True)
-            if response.status_code == 200:
-                with open(image_path, 'wb') as image_file:
-                    for chunk in response:
-                        image_file.write(chunk)
-
-            else:
-                logger.debug('response.status_code {}'.format(response.status_code))
-                return
+    if not os.path.isfile(image_path):
+        os.makedirs(image_dir, exist_ok=True)
+        logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
+        response = requests.get(image_source_url, stream=True)
+        if response.status_code == 200:
+            with open(image_path, 'wb') as image_file:
+                for chunk in response:
+                    image_file.write(chunk)
+        else:
+            logger.debug('response.status_code {}'.format(response.status_code))
+            return
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
 
     return cached_image_url_path
+
+
 
 

@@ -18,6 +18,12 @@ import logging
 
 root_logger = logging.getLogger()
 
+try:
+    import memcache
+except ModuleNotFoundError:
+    root_logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
+    memcache = None
+
 bbox_list = [-180.0, -90.0, 180.0, 90.0] # Get everything regardless of spatial position
 
 netcdf_util_subclass={'point': NetCDFPointUtils, 'line': NetCDFLineUtils} # Subclasses keyed by dataset_format
@@ -29,6 +35,11 @@ if http_proxy:
     os.environ['http_proxy'] = http_proxy
 
 def main():
+    if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
+        memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+    else:
+        memcached_connection = None
+
     dataset_metadata_cache = get_dataset_metadata_cache(db_engine=settings['global_settings']['database_engine'], 
                                                         debug=settings['global_settings']['debug'])
     
@@ -117,7 +128,8 @@ def main():
                 
                 cache_path=os.path.join(cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
                 
-                netcdf_util = netcdf_util_subclass[dataset_format](distribution_url, 
+                netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
+                     memcached_connection=memcached_connection, 
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,

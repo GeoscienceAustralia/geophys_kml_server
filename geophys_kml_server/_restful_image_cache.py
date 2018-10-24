@@ -7,7 +7,7 @@ import os
 import re
 import tempfile
 import requests
-from flask import request, make_response, send_from_directory, send_file
+from flask import request, send_file
 from flask_restful import Resource
 from io import BytesIO
 
@@ -103,13 +103,6 @@ class RestfulImageQuery(Resource):
                 return
         
         elif os.path.isfile(image_path):
-            #===================================================================
-            # image_response = send_from_directory(image_dir, image_basename)
-            # logger.debug('image_response: {}'.format(image_response))
-            # response = make_response(image_response)
-            # response.headers['content-type'] = RestfulImageQuery.CONTENT_TYPE
-            # return response
-            #===================================================================
             return send_file(image_path,
                              attachment_filename=image_basename,
                              mimetype=RestfulImageQuery.CONTENT_TYPE

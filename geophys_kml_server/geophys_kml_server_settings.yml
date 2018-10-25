@@ -1,7 +1,7 @@
 # Global settings
 global_settings:
   debug: true
-  log_file: null #'/tmp/kml_server.log'
+  log_file: '/tmp/kml_server.log'
   memcached_endpoint: 'kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211' # set to None to not use memcached
   cache_images: true # Set this to false to get images from NCI WMS endpoints
   cache_coordinates: true # Set this to true to cache coordinates and lines on local disk

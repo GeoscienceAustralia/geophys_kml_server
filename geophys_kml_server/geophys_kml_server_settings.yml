@@ -2,7 +2,7 @@
 global_settings:
   debug: true
   log_file: '/tmp/kml_server.log'
-  memcached_endpoint: 'kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211' # set to None to not use memcached
+  memcached_endpoint: None #'kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211' # set to None to not use memcached
   cache_images: true # Set this to false to get images from NCI WMS endpoints
   cache_coordinates: true # Set this to true to cache coordinates and lines on local disk
   http_compression: true # Set this to false for local use, true for remote
@@ -13,6 +13,7 @@ global_settings:
   cache_root_dir: '/tmp' # Root directory for disk cache (if enabled)
   #host: '0.0.0.0' # Comment this out for normal local host testing
   #http_proxy: 'http://127.0.0.1:8888' # Comment this out for normal local host testing
+  s3_bucket_name: 'kml_server_cache'
   database_engine: SQLite # SQLite or Postgres
   database_settings: # Settings for different database engines (constructor parameters)
     SQLite:

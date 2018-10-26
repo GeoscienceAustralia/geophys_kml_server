@@ -61,6 +61,8 @@ class NetCDF2kmlConverter(object):
         else:
             self.memcached_connection = None
 
+        self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
+
         self.url_root = url_root
         
         self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 
@@ -248,7 +250,7 @@ class NetCDF2kmlConverter(object):
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
                                      memcached_connection=self.memcached_connection,
                                      enable_disk_cache=self.cache_coordinates,
-                                     enable_memory_cache=True,
+                                     enable_memory_cache=False,
                                      cache_path=cache_path,
                                      debug=self.debug
                                      )        
@@ -495,6 +497,11 @@ class NetCDF2kmlConverter(object):
             logger.debug("BBOX NORTH extent: {}".format(bounding_box[3]))
 
             wms_url = dataset_metadata_dict['distribution_url'].replace('/dodsC/', '/wms/') #TODO: Replace this hack
+
+            # change to s3 here
+           # if self.s3_bucket_name is not None:
+           #      wms_url =
+
 
             if self.cache_images and self.url_root:
                 # Retrieve image for entire dataset

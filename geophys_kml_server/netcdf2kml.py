@@ -250,7 +250,7 @@ class NetCDF2kmlConverter(object):
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
                                      memcached_connection=self.memcached_connection,
                                      enable_disk_cache=self.cache_coordinates,
-                                     enable_memory_cache=False,
+                                     enable_memory_cache=True,
                                      cache_path=cache_path,
                                      debug=self.debug
                                      )        

@@ -34,11 +34,11 @@ import sys
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-try:
-    import memcache
-except ModuleNotFoundError:
-    logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
-    memcache = None
+# try:
+#     import memcache
+# except ModuleNotFoundError:
+#     logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
+#     memcache = None
 
 class NetCDF2kmlConverter(object):
     '''
@@ -56,10 +56,10 @@ class NetCDF2kmlConverter(object):
         self._debug = None
         self.debug = debug
 
-        if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
-            self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        else:
-            self.memcached_connection = None
+        # if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
+        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        # else:
+        #     self.memcached_connection = None
 
         self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
 
@@ -248,7 +248,7 @@ class NetCDF2kmlConverter(object):
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
-                                     memcached_connection=self.memcached_connection,
+                                     #memcached_connection=self.memcached_connection,
                                      enable_disk_cache=self.cache_coordinates,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
@@ -368,7 +368,7 @@ class NetCDF2kmlConverter(object):
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         logger.debug(cache_path)
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
-                                       memcached_connection=self.memcached_connection,
+                                       #memcached_connection=self.memcached_connection,
                                        enable_disk_cache=self.cache_coordinates,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
@@ -551,7 +551,7 @@ class NetCDF2kmlConverter(object):
                     cache_image_file(dataset_type=self.dataset_type, 
                                      image_basename=os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png', 
                                      image_source_url=wms_url,
-                                     memcached_connection=self.memcached_connection
+                                     #memcached_connection=self.memcached_connection
                                      )
                     )
                 logger.debug('wms_url: {}'.format(wms_url))

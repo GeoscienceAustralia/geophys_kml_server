@@ -30,6 +30,7 @@ import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import sys
+import cottoncandy
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -60,6 +61,8 @@ class NetCDF2kmlConverter(object):
         #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
         # else:
         #     self.memcached_connection = None
+
+        self.cci = cottoncandy.get_interface('kml-server-cache', endpoint_url='https://s3.amazonaws.com')
 
         self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
 
@@ -373,6 +376,7 @@ class NetCDF2kmlConverter(object):
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
                                        s3_bucket=self.s3_bucket_name,
+                                       cci=cci,
                                        debug=self.debug
                                        )
 

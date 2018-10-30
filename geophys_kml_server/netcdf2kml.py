@@ -30,7 +30,6 @@ import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import sys
-import cottoncandy
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -40,6 +39,11 @@ logger.setLevel(logging.INFO)
 # except ModuleNotFoundError:
 #     logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
 #     memcache = None
+try:
+    import cottoncandy
+except Exception as e:
+    logger.warning('Unable to import cottoncandy. AWS-specific functionality will not be enabled: {}'.format(e))
+    cottoncandy = None
 
 class NetCDF2kmlConverter(object):
     '''

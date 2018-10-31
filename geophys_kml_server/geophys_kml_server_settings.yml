@@ -45,7 +45,7 @@ default_dataset_settings:
   
 # Dataset settings
 dataset_settings:
-  ground_gravity:
+  ground_gravity_points:
     dataset_format: point
     min_polygon_bbox_width: 1.5 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [AUS, ground digital data, gravity, geophysical survey, points]
@@ -66,7 +66,7 @@ dataset_settings:
     colormap_name: rainbow
     color_count: 256
     timestamp_detail_view: true
-  aem:
+  aem_lines:
     dataset_format: line
     min_polygon_bbox_width: 30.0 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [geophysics, airborne, AEM, conductivity]

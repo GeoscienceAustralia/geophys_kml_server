@@ -259,6 +259,8 @@ class NetCDF2kmlConverter(object):
                                      enable_disk_cache=self.cache_coordinates,
                                      enable_memory_cache=True,
                                      cache_path=self.cache_dir,
+                                     s3_bucket=self.s3_bucket_name,
+                                     cci=self.cci,
                                      debug=self.debug
                                      )        
         # Compute segment length as a proportion of the height of bounding box

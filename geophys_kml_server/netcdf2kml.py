@@ -252,7 +252,7 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         '''
-        cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+        #cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
                                      #memcached_connection=self.memcached_connection,

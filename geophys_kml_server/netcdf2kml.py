@@ -373,8 +373,7 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         """        
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        logger.debug("------------------------------------------------------------------------------------------------------------")
-        logger.debug(cache_path)
+        cache_path = re.sub('/tmp', '', cache_path)
 
         logger.debug(cache_path)
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],

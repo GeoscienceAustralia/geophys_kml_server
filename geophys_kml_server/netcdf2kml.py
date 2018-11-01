@@ -69,7 +69,7 @@ class NetCDF2kmlConverter(object):
         self.cci = cottoncandy.get_interface('kml-server-cache', endpoint_url='https://s3.amazonaws.com')
 
         self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
-
+        self.dataset_type = dataset_type
         self.url_root = url_root
         
         self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 
@@ -253,6 +253,7 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         '''
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+        s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
         
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
                                      #memcached_connection=self.memcached_connection,
@@ -260,6 +261,7 @@ class NetCDF2kmlConverter(object):
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
                                      s3_bucket=self.s3_bucket_name,
+                                     s3_path_key=s3_path_key,
                                      cci=self.cci,
                                      debug=self.debug
                                      )        
@@ -375,7 +377,7 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         """        
         cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        cache_path = re.sub('/tmp', '', cache_path)
+        s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
 
         logger.debug(cache_path)
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
@@ -384,6 +386,7 @@ class NetCDF2kmlConverter(object):
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
                                        s3_bucket=self.s3_bucket_name,
+                                       s3_path_key=s3_path_key,
                                        cci=self.cci,
                                        debug=self.debug
                                        )
@@ -730,12 +733,10 @@ class NetCDF2kmlConverter(object):
         build_kml_function = self.build_kml_functions.get(kml_format)
         assert build_kml_function, 'Invalid dataset form "{}". Must be in {}'.format(self.dataset_format, 
                                                                                      list(self.build_kml_functions.keys()))
-        
         logger.debug('Processing {}s for dataset {}'.format(self.dataset_format, dataset_metadata_dict['netcdf_path']))
         return build_kml_function(dataset_metadata_dict, bbox_list, visibility)
 
-        
-        
+
     def build_bbox_kml(self, dataset_metadata_dict_list, bbox_list, visibility=True):
         '''
         Function to build and return KML for entire bounding box

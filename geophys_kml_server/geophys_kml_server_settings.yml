@@ -13,7 +13,7 @@ global_settings:
   cache_root_dir: '/tmp' # Root directory for disk cache (if enabled)
   #host: '0.0.0.0' # Comment this out for normal local host testing
   #http_proxy: 'http://127.0.0.1:8888' # Comment this out for normal local host testing
-  s3_bucket_name: 'kml-server-cache'
+  s3_bucket_name: 'kml-server-cache2'
   database_engine: SQLite # SQLite or Postgres
   database_settings: # Settings for different database engines (constructor parameters)
     SQLite:

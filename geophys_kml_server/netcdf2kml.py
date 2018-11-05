@@ -69,8 +69,8 @@ class NetCDF2kmlConverter(object):
         #self.s3_bucket_name = 'kml-server-cache'
         logger.debug(cottoncandy)
         logger.debug(self.s3_bucket_name)
-        self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
-
+        #self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
+        self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
 
         self.dataset_type = dataset_type
         self.url_root = url_root

@@ -67,7 +67,7 @@ class NetCDF2kmlConverter(object):
         #     self.memcached_connection = None
         #self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
         self.s3_bucket_name = 'kml-server-cache'
-        self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
+        self.cci = None #cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
 
 
         self.dataset_type = dataset_type

@@ -30,6 +30,8 @@ import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import sys
+import boto3
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -71,6 +73,10 @@ class NetCDF2kmlConverter(object):
         logger.debug(self.s3_bucket_name)
         #self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
         self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
+
+        s3 = boto3.resource('s3')
+        data = 'a big old string'
+        s3.Bucket('kml-server-cache').put_object(Key='test_from_script', Body=data)
 
         self.dataset_type = dataset_type
         self.url_root = url_root

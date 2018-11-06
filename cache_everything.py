@@ -132,7 +132,17 @@ def main():
                 #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
                 cache_path = os.path.join(cache_dir,
                                           re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
-                netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
+                # netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
+                #      enable_disk_cache=True,
+                #      enable_memory_cache=True,
+                #      cache_path=cache_path,
+                #      s3_path_key= s3_path_key,
+                #      s3_bucket='kml-cache-server',
+                #      cci = cci,
+                #      debug=settings['global_settings']['debug']
+                #      )
+
+                netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,

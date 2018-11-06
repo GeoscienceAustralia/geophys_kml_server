@@ -75,7 +75,7 @@ class NetCDF2kmlConverter(object):
 
 
         myvars = {}
-        with open("/var/www/html/geophys_kml_server/geophys_kml_server/keys") as myfile:
+        with open("/var/www/html/keys") as myfile:
             for line in myfile:
                 name, var = line.partition("=")[::2]
                 myvars[name.strip()] = var.strip('\n')

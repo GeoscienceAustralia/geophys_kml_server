@@ -116,9 +116,10 @@ def main():
             
             try:
                 print('\tCaching data for {} dataset {}'.format(dataset_format, distribution_url))
-                
-                cache_path=os.path.join(cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
-                
+
+                s3_path_key = "{}/{}".format('ground_gravity', dataset_metadata_dict['netcdf_basename'])
+                cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
+
                 netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,

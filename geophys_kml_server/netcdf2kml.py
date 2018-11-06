@@ -72,11 +72,25 @@ class NetCDF2kmlConverter(object):
         logger.debug(cottoncandy)
         logger.debug(self.s3_bucket_name)
         #self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
-        self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
+
+
+        myvars = {}
+        with open("keys") as myfile:
+            for line in myfile:
+                name, var = line.partition("=")[::2]
+                myvars[name.strip()] = var
+                print(myvars)
+        print(myvars["Access key ID"])
+
+        self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
+                                             SECRET_KEY=myvars["Secret access key"],
+                                             endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
 
         # s3 = boto3.resource('s3')
         # data = 'a big old string'
         # s3.Bucket('kml-server-cache').put_object(Key='test_from_script', Body=data)
+
+
 
         self.dataset_type = dataset_type
         self.url_root = url_root

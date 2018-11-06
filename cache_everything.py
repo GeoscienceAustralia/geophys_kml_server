@@ -31,6 +31,13 @@ if http_proxy:
     os.environ['http_proxy'] = http_proxy
 
 def main():
+    myvars = {}
+    with open("/var/www/html/keys") as myfile:
+        for line in myfile:
+            name, var = line.partition("=")[::2]
+            myvars[name.strip()] = var.strip('\n')
+
+            
     cci = cottoncandy.get_interface('kml-cache-server', ACCESS_KEY=myvars["Access key ID"],
                                          SECRET_KEY=myvars["Secret access key"],
                                          endpoint_url="https://s3-ap-southeast-2.amazonaws.com")

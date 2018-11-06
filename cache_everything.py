@@ -15,6 +15,7 @@ from geophys_utils.dataset_metadata_cache import get_dataset_metadata_cache
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import logging
+import cottoncandy
 
 root_logger = logging.getLogger()
 
@@ -30,6 +31,9 @@ if http_proxy:
     os.environ['http_proxy'] = http_proxy
 
 def main():
+    cci = cottoncandy.get_interface('kml-cache-server', ACCESS_KEY=myvars["Access key ID"],
+                                         SECRET_KEY=myvars["Secret access key"],
+                                         endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
 
     dataset_metadata_cache = get_dataset_metadata_cache(db_engine=settings['global_settings']['database_engine'], 
                                                         debug=settings['global_settings']['debug'])
@@ -118,15 +122,19 @@ def main():
                 print('\tCaching data for {} dataset {}'.format(dataset_format, distribution_url))
 
                 s3_path_key = "{}/{}".format('ground_gravity', dataset_metadata_dict['netcdf_basename'])
-                cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
-
+                #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
+                cache_path = os.path.join(cache_dir,
+                                          re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
                 netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,
+                     s3_path_key= s3_path_key,
+                     s3_bucket='kml-cache-server',
+                     cci = cci,
                      debug=settings['global_settings']['debug']
                      )
-                
+
                 print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 
                 if dataset_format == 'line':

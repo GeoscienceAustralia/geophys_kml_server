@@ -37,8 +37,9 @@ def main():
             name, var = line.partition("=")[::2]
             myvars[name.strip()] = var.strip('\n')
 
+    s3_bucket_name = settings['global_settings']['s3_bucket_name']
 
-    cci = cottoncandy.get_interface('kml-cache-server', ACCESS_KEY=myvars["Access key ID"],
+    cci = cottoncandy.get_interface(s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                          SECRET_KEY=myvars["Secret access key"],
                                          endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
 
@@ -141,13 +142,15 @@ def main():
                 #      cci = cci,
                 #      debug=settings['global_settings']['debug']
                 #      )
-
+                print("HERE")
+                print(s3_bucket_name)
+                print(cci)
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,
                      s3_path_key= s3_path_key,
-                     s3_bucket='kml-cache-server',
+                     s3_bucket=s3_bucket_name,
                      cci = cci,
                      debug=settings['global_settings']['debug']
                      )

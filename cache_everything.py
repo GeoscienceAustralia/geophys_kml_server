@@ -56,7 +56,8 @@ def main():
         
         dataset_format = dataset_settings['dataset_format']
 
-        if dataset_format not in ['point', 'line', 'grid']:
+        #if dataset_format not in ['point', 'line', 'grid']:
+        if dataset_format not in ['point', 'line']:
             continue
         
         cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 

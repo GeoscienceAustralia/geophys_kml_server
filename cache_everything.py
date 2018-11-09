@@ -130,7 +130,7 @@ def main():
             try:
                 print('\tCaching data for {} dataset {}'.format(dataset_format, distribution_url))
 
-                s3_path_key = "{}/{}".format('ground_gravity', dataset_metadata_dict['netcdf_basename'])
+                s3_path_key = "{}/{}".format('magnetic_lines', dataset_metadata_dict['netcdf_basename'])
                 #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
                 cache_path = os.path.join(cache_dir,
                                           re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
@@ -155,6 +155,7 @@ def main():
                      cci = cci,
                      debug=settings['global_settings']['debug']
                      )
+
 
                 print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 

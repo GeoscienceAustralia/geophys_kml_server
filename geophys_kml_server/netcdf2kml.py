@@ -275,11 +275,15 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         '''
-        cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+
+        cache_path = os.path.join(self.cache_dir,
+                                  re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
         s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
+
+        # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
         
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
-                                     #memcached_connection=self.memcached_connection,
                                      enable_disk_cache=self.cache_coordinates,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
@@ -404,7 +408,6 @@ class NetCDF2kmlConverter(object):
 
         logger.debug(cache_path)
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
-                                       #memcached_connection=self.memcached_connection,
                                        enable_disk_cache=self.cache_coordinates,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
@@ -589,7 +592,6 @@ class NetCDF2kmlConverter(object):
                     cache_image_file(dataset_type=self.dataset_type, 
                                      image_basename=os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png', 
                                      image_source_url=wms_url,
-                                     #memcached_connection=self.memcached_connection
                                      )
                     )
                 logger.debug('wms_url: {}'.format(wms_url))

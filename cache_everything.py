@@ -70,9 +70,9 @@ def main():
                               )
             os.makedirs(cache_dir, exist_ok=True)
         else:
+            cache_dir = None
 
-        dataset_metadata_dict_list = dataset_metadata_cache.search_dataset_distributions(
-            keyword_list=dataset_settings['keyword_list'],
+        dataset_metadata_dict_list = dataset_metadata_cache.search_dataset_distributions(keyword_list=dataset_settings['keyword_list'],
             protocol=dataset_settings['protocol'],
             ll_ur_coords=[[bbox_list[0], bbox_list[1]], [bbox_list[2], bbox_list[3]]]
         )

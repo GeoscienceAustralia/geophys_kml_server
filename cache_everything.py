@@ -19,7 +19,6 @@ import cottoncandy
 
 root_logger = logging.getLogger()
 
-
 bbox_list = [-180.0, -90.0, 180.0, 90.0] # Get everything regardless of spatial position
 
 netcdf_util_subclass={'point': NetCDFPointUtils, 'line': NetCDFLineUtils} # Subclasses keyed by dataset_format
@@ -31,13 +30,17 @@ if http_proxy:
     os.environ['http_proxy'] = http_proxy
 
 def main():
+
+    if settings['global_settings']['s3_bucket_name']:
+        s3_bucket_name = settings['global_settings']['s3_bucket_name']
+    else:
+        s3_bucket_name = None
+
     myvars = {}
     with open("/var/www/html/keys") as myfile:
         for line in myfile:
             name, var = line.partition("=")[::2]
             myvars[name.strip()] = var.strip('\n')
-
-    s3_bucket_name = settings['global_settings']['s3_bucket_name']
 
     cci = cottoncandy.get_interface(s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                          SECRET_KEY=myvars["Secret access key"],
@@ -59,14 +62,15 @@ def main():
         #if dataset_format not in ['point', 'line', 'grid']:
         if dataset_format not in ['line']:
             continue
-        
-        cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 
-                          tempfile.gettempdir()),
-                          'kml_server_cache',
-                          dataset_type
-                          )
-        os.makedirs(cache_dir, exist_ok=True)
-        
+        if s3_bucket_name is None:
+            cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
+                              tempfile.gettempdir()),
+                              'kml_server_cache',
+                              dataset_type
+                              )
+            os.makedirs(cache_dir, exist_ok=True)
+        else:
+
         dataset_metadata_dict_list = dataset_metadata_cache.search_dataset_distributions(
             keyword_list=dataset_settings['keyword_list'],
             protocol=dataset_settings['protocol'],
@@ -144,13 +148,16 @@ def main():
                 #      debug=settings['global_settings']['debug']
                 #      )
                 print("HERE")
-                print(s3_bucket_name)
-                print(cci)
+                print("s3_bucket_name: " + str(s3_bucket_name))
+                print("cci: " + cci)
+                print("s3_path_key: " + str(s3_path_key))
+                print("cache_path: " + str(cache_path))
+
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,
-                     s3_path_key= s3_path_key,
+                     s3_path_key=s3_path_key,
                      s3_bucket=s3_bucket_name,
                      cci = cci,
                      debug=settings['global_settings']['debug']

@@ -58,16 +58,15 @@ def main():
         #=======================================================================
         
         dataset_format = dataset_settings['dataset_format']
-
+        cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
+                                  tempfile.gettempdir()),
+                                 'kml_server_cache',
+                                 dataset_type)
         #if dataset_format not in ['point', 'line', 'grid']:
         if dataset_format not in ['line']:
             continue
         if s3_bucket_name is None:
-            cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
-                              tempfile.gettempdir()),
-                              'kml_server_cache',
-                              dataset_type
-                              )
+
             os.makedirs(cache_dir, exist_ok=True)
 
 

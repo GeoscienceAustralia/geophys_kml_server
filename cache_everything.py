@@ -69,8 +69,7 @@ def main():
                               dataset_type
                               )
             os.makedirs(cache_dir, exist_ok=True)
-        else:
-            cache_dir = None
+
 
         dataset_metadata_dict_list = dataset_metadata_cache.search_dataset_distributions(keyword_list=dataset_settings['keyword_list'],
             protocol=dataset_settings['protocol'],

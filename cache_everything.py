@@ -147,7 +147,7 @@ def main():
                 #      )
                 print("HERE")
                 print("s3_bucket_name: " + str(s3_bucket_name))
-                print("cci: " + cci)
+                print("cci: " + str(cci))
                 print("s3_path_key: " + str(s3_path_key))
                 print("cache_path: " + str(cache_path))
 

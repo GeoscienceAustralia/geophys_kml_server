@@ -148,12 +148,13 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     image_path = os.path.join(image_dir, image_basename)
 
     if s3_bucket_name is not None:
+        status_code, buffer = get_image_buffer(image_source_url)
         client = boto3.client('s3')
         s3 = boto3.resource('s3')
         #with open(image_path, 'wb') as image_file:
-        image_file = open(image_path, 'rb')
+        #image_file = open(buffer, 'rb')
         s3_object = s3.Object('kml-server-cache', image_path)
-        s3_object.put(Body=image_file)
+        s3_object.put(Body=buffer)
 
 
     # if memcache and memcached_connection:

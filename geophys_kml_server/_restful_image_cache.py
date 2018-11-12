@@ -149,8 +149,8 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
     print("s3_key_name: " + s3_key_name)
     if s3_bucket_name is not None:
-        status_code, buffer = get_image_buffer(image_source_url)
         client = boto3.client('s3')
+        status_code, buffer = get_image_buffer(image_source_url)
         s3 = boto3.resource('s3')
         #with open(image_path, 'wb') as image_file:
         #image_file = open(buffer, 'rb')

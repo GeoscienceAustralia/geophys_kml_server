@@ -30,8 +30,7 @@ import tempfile
 from geophys_utils import NetCDFPointUtils, NetCDFLineUtils
 from geophys_kml_server import cache_image_file
 import sys
-
-
+import boto3
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -109,7 +108,8 @@ class NetCDF2kmlConverter(object):
         combined_settings.update(settings['default_dataset_settings']) # Default dataset settings
         combined_settings.update(settings['dataset_settings'][dataset_type]) # Dataset settings
         combined_settings['dataset_type'] = dataset_type
-        
+
+        # set settings key values as self variables
         logger.debug('combined_settings: {}'.format(combined_settings))        
         for key, value in combined_settings.items():
             setattr(self, key, value)
@@ -540,36 +540,33 @@ class NetCDF2kmlConverter(object):
 
             wms_url = dataset_metadata_dict['distribution_url'].replace('/dodsC/', '/wms/') #TODO: Replace this hack
 
-            # change to s3 here
-           # if self.s3_bucket_name is not None:
-           #      wms_url =
 
+            if self.url_root:
+                if self.cache_images_locally or self.cache_images_s3:
+                    # Retrieve image for entire dataset
+                    north = dataset_metadata_dict['latitude_max']
+                    south = dataset_metadata_dict['latitude_min']
+                    east = dataset_metadata_dict['longitude_max']
+                    west = dataset_metadata_dict['longitude_min']
+                else:
+                    # Retrieve image for portion of dataset in view bounding box
+                    west = max(bounding_box[0], dataset_metadata_dict['longitude_min'])
+                    east = min(bounding_box[2], dataset_metadata_dict['longitude_max'])
+                    south = max(bounding_box[1], dataset_metadata_dict['latitude_min'])
+                    north = min(bounding_box[3], dataset_metadata_dict['latitude_max'])
 
-            if self.cache_images and self.url_root:
-                # Retrieve image for entire dataset
-                north = dataset_metadata_dict['latitude_max']
-                south = dataset_metadata_dict['latitude_min']
-                east = dataset_metadata_dict['longitude_max']
-                west = dataset_metadata_dict['longitude_min']
-            else:  
-                # Retrieve image for portion of dataset in view bounding box            
-                west = max(bounding_box[0], dataset_metadata_dict['longitude_min'])
-                east = min(bounding_box[2], dataset_metadata_dict['longitude_max'])
-                south = max(bounding_box[1], dataset_metadata_dict['latitude_min'])
-                north = min(bounding_box[3], dataset_metadata_dict['latitude_max'])
-
-            wms_url = wms_url + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX={0},{1},{2},{3}&CRS=EPSG:4326&WIDTH={4}&HEIGHT={5}&LAYERS={6}&STYLES=&FORMAT=image/png" \
-                      "&DPI=120&MAP_RESOLUTION=120&FORMAT_OPTIONS=dpi:120&TRANSPARENT=TRUE" \
-                      "&COLORSCALERANGE={7}%2C{8}&NUMCOLORBANDS=127".format(south, 
-                                                                             west, 
-                                                                             north, 
-                                                                             east, 
-                                                                             int((east - west) / self.wms_pixel_size), 
-                                                                             int((north - south) / self.wms_pixel_size), 
-                                                                             self.wms_layer_name,
-                                                                             self.wms_color_range[0],
-                                                                             self.wms_color_range[1]
-                                                                             )
+                wms_url = wms_url + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX={0},{1},{2},{3}&CRS=EPSG:4326&WIDTH={4}&HEIGHT={5}&LAYERS={6}&STYLES=&FORMAT=image/png" \
+                          "&DPI=120&MAP_RESOLUTION=120&FORMAT_OPTIONS=dpi:120&TRANSPARENT=TRUE" \
+                          "&COLORSCALERANGE={7}%2C{8}&NUMCOLORBANDS=127".format(south,
+                                                                                 west,
+                                                                                 north,
+                                                                                 east,
+                                                                                 int((east - west) / self.wms_pixel_size),
+                                                                                 int((north - south) / self.wms_pixel_size),
+                                                                                 self.wms_layer_name,
+                                                                                 self.wms_color_range[0],
+                                                                                 self.wms_color_range[1]
+                                                                                 )
             logger.debug('wms_url: {}'.format(wms_url))
 
             #mag_tmi_anomaly
@@ -585,8 +582,10 @@ class NetCDF2kmlConverter(object):
             #                                                  visibility=visibility)
 
             # dataset_kml.style = self.point_style
+
+
             
-            if self.cache_images and self.url_root:
+            if self.cache_images_locally and self.url_root:
                 # Cache image and mModify URL for cached image file
                 wms_url = '{}{}'.format(self.url_root,
                     cache_image_file(dataset_type=self.dataset_type, 
@@ -595,6 +594,32 @@ class NetCDF2kmlConverter(object):
                                      )
                     )
                 logger.debug('wms_url: {}'.format(wms_url))
+
+            if self.cache_images_s3 and self.url_root:
+                s3_key_name = re.sub('/tmp/kml_server_cache/', '', self.cache_dir)
+                s3_key_name = "{0}/{1}".format(s3_key_name, os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png')
+                print("s3_key_name: " + s3_key_name)
+                if self.s3_bucket_name is not None:
+                    client = boto3.client('s3')
+                    try:
+                        b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
+                        wms_url = b['Body'].read()
+                    except:
+                        wms_url = '{}{}'.format(self.url_root,
+                                                cache_image_file(dataset_type=self.dataset_type,
+                                                                 image_basename=os.path.splitext(
+                                                                     dataset_metadata_dict['netcdf_basename'])[
+                                                                                    0] + '.png',
+                                                                 image_source_url=wms_url,
+                                                                 s3_bucket_name=self.s3_bucket_name,
+                                                                 s3_key_name=s3_key_name
+                                                                 )
+                                                )
+
+
+
+
+
             logger.debug('wms_url: {}'.format(wms_url))
 
             ground_overlay_kml = dataset_folder_kml.newgroundoverlay(name="Survey Thumbnail Image")

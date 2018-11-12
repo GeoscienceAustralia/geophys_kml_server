@@ -586,6 +586,7 @@ class NetCDF2kmlConverter(object):
 
             
             if self.cache_images_locally and self.url_root:
+                logger.debug("attempting to pull from LOCAL image cache -----------------")
                 # Cache image and mModify URL for cached image file
                 wms_url = '{}{}'.format(self.url_root,
                     cache_image_file(dataset_type=self.dataset_type, 
@@ -596,17 +597,20 @@ class NetCDF2kmlConverter(object):
                 logger.debug('wms_url: {}'.format(wms_url))
 
             if self.cache_images_s3 and self.url_root:
+                logger.debug("accessing s3 image cache -----------------")
                 s3_key_name = re.sub('/tmp/kml_server_cache/', '', self.cache_dir)
                 s3_key_name = "{0}/{1}".format(s3_key_name, os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png')
                 print("s3_key_name: " + s3_key_name)
                 if self.s3_bucket_name is not None:
                     client = boto3.client('s3')
                     try:
-                        print("PULLING PNG FROM S3!")
+                        logger.debug("attempting to pull from s3 image cache -----------------")
                         b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
                         wms_url = b['Body'].read()
                     except:
+                        logger.debug("building s3 image cache -----------------")
                         wms_url = '{}{}'.format(self.url_root,
+
                                                 cache_image_file(dataset_type=self.dataset_type,
                                                                  image_basename=os.path.splitext(
                                                                      dataset_metadata_dict['netcdf_basename'])[

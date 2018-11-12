@@ -17,11 +17,11 @@ import logging
 
 logger = logging.getLogger(__name__)
     
-try:
-    import memcache
-except ModuleNotFoundError:
-    logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
-    memcache = None
+# try:
+#     import memcache
+# except ModuleNotFoundError:
+#     logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
+#     memcache = None
 
 if settings['global_settings']['debug']:
     logger.setLevel(logging.DEBUG)
@@ -53,10 +53,10 @@ class RestfulImageQuery(Resource):
         '''
         super(RestfulImageQuery, self).__init__()
         
-        if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
-            self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        else:
-            self.memcached_connection = None
+        # if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
+        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
+        # else:
+        #     self.memcached_connection = None
 
         
             
@@ -85,24 +85,24 @@ class RestfulImageQuery(Resource):
         image_path = os.path.join(image_dir, image_basename)
         logger.debug('image_path: {}'.format(image_path))
         
-        if self.memcached_connection:
-            #TODO: Finish implementing memcached to HTML here
-            png_cache_key = os.path.join(image_dir, image_basename)
-            png_object = self.memcached_connection.get(png_cache_key) 
-            if png_object is not None:
-                buffer = BytesIO()
-                buffer.write(png_object)
-                buffer.seek(0)
-                return send_file(buffer,
-                                 attachment_filename=image_basename,
-                                 mimetype=RestfulImageQuery.CONTENT_TYPE
-                                 )
-            else:
-                #TODO: Craft a proper response for bad query - 404 perhaps?
-                logger.debug('Image key {} does not exist'.format(image_path))
-                return
+        # if self.memcached_connection:
+        #     #TODO: Finish implementing memcached to HTML here
+        #     png_cache_key = os.path.join(image_dir, image_basename)
+        #     png_object = self.memcached_connection.get(png_cache_key)
+        #     if png_object is not None:
+        #         buffer = BytesIO()
+        #         buffer.write(png_object)
+        #         buffer.seek(0)
+        #         return send_file(buffer,
+        #                          attachment_filename=image_basename,
+        #                          mimetype=RestfulImageQuery.CONTENT_TYPE
+        #                          )
+        #     else:
+        #         #TODO: Craft a proper response for bad query - 404 perhaps?
+        #         logger.debug('Image key {} does not exist'.format(image_path))
+        #         return
         
-        elif os.path.isfile(image_path):
+        if os.path.isfile(image_path):
             return send_file(image_path,
                              attachment_filename=image_basename,
                              mimetype=RestfulImageQuery.CONTENT_TYPE
@@ -144,17 +144,17 @@ def cache_image_file(dataset_type, image_basename, image_source_url):  #, memcac
 
     image_path = os.path.join(image_dir, image_basename)
     
-    if memcache and memcached_connection:
-        if memcached_connection.get(image_path) is None: #TODO: Determine whether we can check for object existence without retrieving it
-            status_code, buffer = get_image_buffer(image_source_url)
-            if status_code == 200 and buffer is not None:
-                logger.debug('Writing image to memcached with key {}'.format(image_path))
-                memcached_connection.set(image_path, buffer.read())
-            else:
-                logger.debug('response status_code {}'.format(status_code))
-                return
+    # if memcache and memcached_connection:
+    #     if memcached_connection.get(image_path) is None: #TODO: Determine whether we can check for object existence without retrieving it
+    #         status_code, buffer = get_image_buffer(image_source_url)
+    #         if status_code == 200 and buffer is not None:
+    #             logger.debug('Writing image to memcached with key {}'.format(image_path))
+    #             memcached_connection.set(image_path, buffer.read())
+    #         else:
+    #             logger.debug('response status_code {}'.format(status_code))
+    #             return
 
-    elif not os.path.isfile(image_path):
+    if not os.path.isfile(image_path):
         os.makedirs(image_dir, exist_ok=True)
         status_code, buffer = get_image_buffer(image_source_url)
         if status_code == 200 and buffer is not None:

@@ -63,7 +63,7 @@ def main():
                                  'kml_server_cache',
                                  dataset_type)
         #if dataset_format not in ['point', 'line', 'grid']:
-        if dataset_format not in ['line']:
+        if dataset_format not in ['grid']:
             continue
         if s3_bucket_name is None:
 
@@ -92,41 +92,41 @@ def main():
             
             distribution_url = dataset_metadata_dict['distribution_url']
             
-            # if dataset_format == 'grid':
-            #     wms_url = distribution_url.replace('/dodsC/', '/wms/') #TODO: Replace this hack
+            if dataset_format == 'grid':
+                wms_url = distribution_url.replace('/dodsC/', '/wms/') #TODO: Replace this hack
+
+                image_basename = os.path.splitext(os.path.basename(distribution_url))[0] + '.png'
+
+                wms_pixel_size = dataset_settings.get('wms_pixel_size') or settings['default_dataset_settings'].get('wms_pixel_size')
+                assert wms_pixel_size, 'Unable to determine wms_pixel_size'
+
+                # Retrieve image for entire dataset
+                north = dataset_metadata_dict['latitude_max']
+                south = dataset_metadata_dict['latitude_min']
+                east = dataset_metadata_dict['longitude_max']
+                west = dataset_metadata_dict['longitude_min']
+
+                wms_url = wms_url + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX={0},{1},{2},{3}&CRS=EPSG:4326&WIDTH={4}&HEIGHT={5}&LAYERS={6}&STYLES=&FORMAT=image/png" \
+                      "&DPI=120&MAP_RESOLUTION=120&FORMAT_OPTIONS=dpi:120&TRANSPARENT=TRUE" \
+                      "&COLORSCALERANGE={7}%2C{8}&NUMCOLORBANDS=127".format(south,
+                                                                             west,
+                                                                             north,
+                                                                             east,
+                                                                             int((east - west) / wms_pixel_size),
+                                                                             int((north - south) / wms_pixel_size),
+                                                                             dataset_settings['wms_layer_name'],
+                                                                             dataset_settings['wms_color_range'][0],
+                                                                             dataset_settings['wms_color_range'][1],
+                                                                             )
+
+                print('\tCaching image {} from {}'.format(image_basename, wms_url))
+
+                cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name)
+
+                print('\t\tImage URL: {}'.format(cached_image_url_path))
+
+                continue
             #
-            #     image_basename = os.path.splitext(os.path.basename(distribution_url))[0] + '.png'
-            #
-            #     wms_pixel_size = dataset_settings.get('wms_pixel_size') or settings['default_dataset_settings'].get('wms_pixel_size')
-            #     assert wms_pixel_size, 'Unable to determine wms_pixel_size'
-            #
-            #     # Retrieve image for entire dataset
-            #     north = dataset_metadata_dict['latitude_max']
-            #     south = dataset_metadata_dict['latitude_min']
-            #     east = dataset_metadata_dict['longitude_max']
-            #     west = dataset_metadata_dict['longitude_min']
-            #
-            #     wms_url = wms_url + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX={0},{1},{2},{3}&CRS=EPSG:4326&WIDTH={4}&HEIGHT={5}&LAYERS={6}&STYLES=&FORMAT=image/png" \
-            #           "&DPI=120&MAP_RESOLUTION=120&FORMAT_OPTIONS=dpi:120&TRANSPARENT=TRUE" \
-            #           "&COLORSCALERANGE={7}%2C{8}&NUMCOLORBANDS=127".format(south,
-            #                                                                  west,
-            #                                                                  north,
-            #                                                                  east,
-            #                                                                  int((east - west) / wms_pixel_size),
-            #                                                                  int((north - south) / wms_pixel_size),
-            #                                                                  dataset_settings['wms_layer_name'],
-            #                                                                  dataset_settings['wms_color_range'][0],
-            #                                                                  dataset_settings['wms_color_range'][1],
-            #                                                                  )
-            #
-            #     print('\tCaching image {} from {}'.format(image_basename, wms_url))
-            #
-            #     cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url)
-            #
-            #     print('\t\tImage URL: {}'.format(cached_image_url_path))
-            #
-            #     continue
-            
             # Points and lines handled below
             
             try:

@@ -284,7 +284,7 @@ class NetCDF2kmlConverter(object):
         # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
         
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
-                                     enable_disk_cache=self.cache_coordinates,
+                                     enable_disk_cache=self.cache_coordinates_locally,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
                                      s3_bucket=self.s3_bucket_name,

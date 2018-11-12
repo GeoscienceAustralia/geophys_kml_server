@@ -63,7 +63,7 @@ def main():
                                  'kml_server_cache',
                                  dataset_type)
         #if dataset_format not in ['point', 'line', 'grid']:
-        if dataset_format not in ['grid']:
+        if dataset_format not in ['line']:
             continue
         if s3_bucket_name is None:
 

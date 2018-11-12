@@ -408,7 +408,7 @@ class NetCDF2kmlConverter(object):
 
         logger.debug(cache_path)
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
-                                       enable_disk_cache=self.cache_coordinates,
+                                       enable_disk_cache=self.cache_coordinates_locally,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
                                        s3_bucket=self.s3_bucket_name,

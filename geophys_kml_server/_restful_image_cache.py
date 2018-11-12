@@ -116,7 +116,7 @@ class RestfulImageQuery(Resource):
             return
 
 
-def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_name=None):  #, memcached_connection=None):
+def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_name=None, s3_key_name=None):  #, memcached_connection=None):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path
@@ -153,7 +153,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         s3 = boto3.resource('s3')
         #with open(image_path, 'wb') as image_file:
         #image_file = open(buffer, 'rb')
-        s3_object = s3.Object('kml-server-cache', image_path)
+        s3_object = s3.Object('kml-server-cache', s3_key_name)
         s3_object.put(Body=buffer)
 
 

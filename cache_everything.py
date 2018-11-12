@@ -119,8 +119,9 @@ def main():
                                                                              )
 
                 print('\tCaching image {} from {}'.format(image_basename, wms_url))
-
-                cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name)
+                s3_key_name = re.sub('\tmp', '', cache_dir)
+                print("s3_key_name" + str(s3_key_name))
+                cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name, s3_key_name)
 
                 print('\t\tImage URL: {}'.format(cached_image_url_path))
 
@@ -135,7 +136,7 @@ def main():
                 #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
                 cache_path = os.path.join(cache_dir,
                                           re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
-                cache_path = re.sub('\tmp', '', cache_path)
+
                 # netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
                 #      enable_disk_cache=True,
                 #      enable_memory_cache=True,

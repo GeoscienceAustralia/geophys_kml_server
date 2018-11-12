@@ -50,7 +50,7 @@ def main():
                                                         debug=settings['global_settings']['debug'])
     
     for dataset_type, dataset_settings in settings['dataset_settings'].items():
-        
+
         #=======================================================================
         # #TODO: Remove this - it's only to exclude things we've already done
         # if dataset_type in ['ground_gravity']:
@@ -68,7 +68,6 @@ def main():
         if s3_bucket_name is None:
 
             os.makedirs(cache_dir, exist_ok=True)
-
 
         dataset_metadata_dict_list = dataset_metadata_cache.search_dataset_distributions(keyword_list=dataset_settings['keyword_list'],
             protocol=dataset_settings['protocol'],
@@ -136,6 +135,7 @@ def main():
                 #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
                 cache_path = os.path.join(cache_dir,
                                           re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
+                cache_path = re.sub('\tmp', '', cache_path)
                 # netcdf_util = netcdf_util_subclass[dataset_format](distribution_url,
                 #      enable_disk_cache=True,
                 #      enable_memory_cache=True,

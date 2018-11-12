@@ -602,6 +602,7 @@ class NetCDF2kmlConverter(object):
                 if self.s3_bucket_name is not None:
                     client = boto3.client('s3')
                     try:
+                        print("PULLING PNG FROM S3!")
                         b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
                         wms_url = b['Body'].read()
                     except:

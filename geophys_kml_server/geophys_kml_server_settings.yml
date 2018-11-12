@@ -3,9 +3,10 @@ global_settings:
   debug: true
   log_file: '/tmp/kml_server.log'
   memcached_endpoint: #'kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211' # set to None to not use memcached
+  cache_images: true
   cache_images_locally: false # Set this to false to get images from NCI WMS endpoints
   cache_images_s3: true
-  cache_coordinates: false # Set this to true to cache coordinates and lines on local disk
+  cache_coordinates_locally: false # Set this to true to cache coordinates and lines on local disk
   cache_coordinates_s3: true # Set this to true to cache coordinates and lines on local disk
   http_compression: true # Set this to false for local use, true for remote
   compress_level: 6 # 6 = Maximum HTTP compression level

@@ -125,7 +125,6 @@ def main():
                 cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name, s3_key_name)
 
                 print('\t\tImage URL: {}'.format(cached_image_url_path))
-
                 continue
             #
             # Points and lines handled below
@@ -162,7 +161,6 @@ def main():
                      cci = cci,
                      debug=settings['global_settings']['debug']
                      )
-
 
                 print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 

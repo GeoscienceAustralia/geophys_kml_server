@@ -119,7 +119,7 @@ def main():
                                                                              )
 
                 print('\tCaching image {} from {}'.format(image_basename, wms_url))
-                s3_key_name = re.sub('/tmp', '', cache_dir)
+                s3_key_name = re.sub('/tmp/kml-server-cache/', '', cache_dir)
                 #s3_key_name = re.sub('?image=', '', s3_key_name)
                 print("s3_key_name" + str(s3_key_name))
                 cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name, s3_key_name)

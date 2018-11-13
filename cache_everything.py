@@ -154,16 +154,16 @@ def main():
                 print("s3_path_key: " + str(s3_path_key))
                 print("cache_path: " + str(cache_path))
                 key_with_xycoords = re.sub('.nc', "_xycoords_narray", s3_path_key)
-                print(key_with_xycoords)
-                for l in list_of_objects:
-                    #print(str(l))
-                    # l looks like this s3.ObjectSummary(bucket_name='kml-server-cache', key='ground_gravity/199159_xycoords_narray')
-                    #print(key_with_xycoords)
-                    if re.search(key_with_xycoords, str(l)):
-                        logging.debug('key found, skipping')
-                        continue
-
-                print('key not found')
+                # print(key_with_xycoords)
+                # for l in list_of_objects:
+                #     #print(str(l))
+                #     # l looks like this s3.ObjectSummary(bucket_name='kml-server-cache', key='ground_gravity/199159_xycoords_narray')
+                #     #print(key_with_xycoords)
+                #     if re.search(key_with_xycoords, str(l)):
+                #         logging.debug('key found, skipping')
+                #         continue
+                #
+                # print('key not found')
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,

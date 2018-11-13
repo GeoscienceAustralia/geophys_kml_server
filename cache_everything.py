@@ -157,9 +157,9 @@ def main():
                 print(key_with_xycoords)
                 for l in list_of_objects:
                     print(l)
-                if key_with_xycoords in list_of_objects:
-                    logging.debug('key found, skipping')
-                    continue
+                    if key_with_xycoords == l:
+                        logging.debug('key found, skipping')
+                        continue
 
                 print('key not found')
                 netcdf_util = NetCDFPointUtils(distribution_url,

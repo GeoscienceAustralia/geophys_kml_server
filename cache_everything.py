@@ -155,6 +155,8 @@ def main():
                 print("cache_path: " + str(cache_path))
                 key_with_xycoords = re.sub('.nc', "_xycoords_narray", s3_path_key)
                 print(key_with_xycoords)
+                for l in list_of_objects:
+                    print(l)
                 if key_with_xycoords in list_of_objects:
                     logging.debug('key found, skipping')
                     continue

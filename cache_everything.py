@@ -153,8 +153,8 @@ def main():
                 print("cci: " + str(cci))
                 print("s3_path_key: " + str(s3_path_key))
                 print("cache_path: " + str(cache_path))
-
-                if s3_path_key in list_of_objects:
+                key_with_xycoords = s3_path_key + "xycoords_narray"
+                if key_with_xycoords in list_of_objects:
                     continue
 
 

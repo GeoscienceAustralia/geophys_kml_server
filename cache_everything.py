@@ -155,6 +155,7 @@ def main():
                 print("cache_path: " + str(cache_path))
                 key_with_xycoords = s3_path_key + "xycoords_narray"
                 if key_with_xycoords in list_of_objects:
+                    logging.debug('key found, skipping')
                     continue
 
 

@@ -153,12 +153,13 @@ def main():
                 print("cci: " + str(cci))
                 print("s3_path_key: " + str(s3_path_key))
                 print("cache_path: " + str(cache_path))
-                key_with_xycoords = s3_path_key + "xycoords_narray"
+                key_with_xycoords = re.sub('.nc', "xycoords_narray", s3_path_key)
+                print(key_with_xycoords)
                 if key_with_xycoords in list_of_objects:
                     logging.debug('key found, skipping')
                     continue
 
-
+                print('key not found')
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,

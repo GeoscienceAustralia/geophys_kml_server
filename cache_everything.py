@@ -46,6 +46,8 @@ def main():
                                          SECRET_KEY=myvars["Secret access key"],
                                          endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
 
+    list_of_objects = cci.get_bucket_objects()
+
     dataset_metadata_cache = get_dataset_metadata_cache(db_engine=settings['global_settings']['database_engine'], 
                                                         debug=settings['global_settings']['debug'])
     
@@ -62,8 +64,8 @@ def main():
                                   tempfile.gettempdir()),
                                  'kml_server_cache',
                                  dataset_type)
-        #if dataset_format not in ['point', 'line', 'grid']:
-        if dataset_format not in ['line']:
+        if dataset_format not in ['point', 'line', 'grid']:
+        #if dataset_format not in ['line']:
             continue
         if s3_bucket_name is None:
 
@@ -132,7 +134,7 @@ def main():
             try:
                 print('\tCaching data for {} dataset {}'.format(dataset_format, distribution_url))
 
-                s3_path_key = "{}/{}".format('magnetic_lines', dataset_metadata_dict['netcdf_basename'])
+                s3_path_key = "{}/{}".format(dataset_type, dataset_metadata_dict['netcdf_basename'])
                 #cache_path = re.sub('.nc', '_xycoords_narray', s3_path_key)
                 cache_path = os.path.join(cache_dir,
                                           re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
@@ -151,6 +153,10 @@ def main():
                 print("cci: " + str(cci))
                 print("s3_path_key: " + str(s3_path_key))
                 print("cache_path: " + str(cache_path))
+
+                if s3_path_key in list_of_objects:
+                    continue
+
 
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,

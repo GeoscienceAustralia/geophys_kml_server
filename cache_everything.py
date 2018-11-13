@@ -157,7 +157,7 @@ def main():
                 print(key_with_xycoords)
                 for l in list_of_objects:
                     print(l)
-                    if re.search(key_with_xycoords, l[1]):
+                    if re.search(key_with_xycoords, l['key']):
                         logging.debug('key found, skipping')
                         continue
 

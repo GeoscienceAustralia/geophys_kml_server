@@ -157,7 +157,7 @@ def main():
                 print(key_with_xycoords)
                 for l in list_of_objects:
                     print(l)
-                    print(l.type())
+                    print(type(l))
                     # l looks like this s3.ObjectSummary(bucket_name='kml-server-cache', key='ground_gravity/199159_xycoords_narray')
 
                     if re.search(key_with_xycoords, l['key']):

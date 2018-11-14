@@ -38,10 +38,13 @@ image_url_path = '/images/<string:dataset_type>'
 print("HERE")
 print(settings['global_settings'].get('cache_root_dir'))
 print(tempfile.gettempdir())
-cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
-                          tempfile.gettempdir()),
+cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir'),
                           'kml_server_cache'
                           )
+# cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
+#                           tempfile.gettempdir()),
+#                           'kml_server_cache'
+#                           )
 print(cache_dir)
 os.makedirs(cache_dir, exist_ok=True)
 

@@ -80,7 +80,7 @@ class NetCDF2kmlConverter(object):
                 myvars[name.strip()] = var.strip('\n')
                 print(myvars)
         print(myvars["Access key ID"])
-
+        print(cottoncandy)
         self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                              SECRET_KEY=myvars["Secret access key"],
                                              endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
@@ -287,6 +287,7 @@ class NetCDF2kmlConverter(object):
                                      enable_disk_cache=self.cache_coordinates_locally,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
+                                     enable_s3_cache=True,#self.cache_coordinates_s3,
                                      s3_bucket=self.s3_bucket_name,
                                      s3_path_key=s3_path_key,
                                      cci=self.cci,
@@ -411,7 +412,7 @@ class NetCDF2kmlConverter(object):
                                        enable_disk_cache=self.cache_coordinates_locally,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
-                                       enable_s3_cache=self.cache_coordinates_s3,
+                                       enable_s3_cache=True,#self.cache_coordinates_s3,
                                        s3_bucket=self.s3_bucket_name,
                                        s3_path_key=s3_path_key,
                                        cci=self.cci,

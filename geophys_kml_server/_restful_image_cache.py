@@ -11,7 +11,7 @@ from flask import request, send_file
 from flask_restful import Resource
 from io import BytesIO
 
-import io
+
 import boto3
 
 from geophys_kml_server import settings

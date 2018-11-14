@@ -411,6 +411,7 @@ class NetCDF2kmlConverter(object):
                                        enable_disk_cache=self.cache_coordinates_locally,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
+                                       enable_s3_cache=self.cache_coordinates_s3,
                                        s3_bucket=self.s3_bucket_name,
                                        s3_path_key=s3_path_key,
                                        cci=self.cci,

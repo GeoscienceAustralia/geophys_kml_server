@@ -38,15 +38,12 @@ image_url_path = '/images/<string:dataset_type>'
 print("HERE")
 print(settings['global_settings'].get('cache_root_dir'))
 print(tempfile.gettempdir())
-cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir'),
-                          'kml_server_cache'
-                          )
-# cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
-#                           tempfile.gettempdir()),
-#                           'kml_server_cache'
-#                           )
+
+# cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or tempfile.gettempdir()),
+#                          '/tmp/kml_server_cache/')
+cache_dir = 'kml_server_cache'
 print(cache_dir)
-os.makedirs(cache_dir, exist_ok=True)
+#os.makedirs(cache_dir, exist_ok=True)
 
 
 
@@ -172,16 +169,16 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     #             logger.debug('response status_code {}'.format(status_code))
     #             return
 
-    if not os.path.isfile(image_path):
-        os.makedirs(image_dir, exist_ok=True)
-        status_code, buffer = get_image_buffer(image_source_url)
-        if status_code == 200 and buffer is not None:
-            logger.debug('Saving image to {}'.format(image_path))
-            with open(image_path, 'wb') as image_file:
-                image_file.write(buffer.read())
-        else:
-            logger.debug('response status_code {}'.format(status_code))
-            return
+    # if not os.path.isfile(image_path):
+    #     os.makedirs(image_dir, exist_ok=True)
+    #     status_code, buffer = get_image_buffer(image_source_url)
+    #     if status_code == 200 and buffer is not None:
+    #         logger.debug('Saving image to {}'.format(image_path))
+    #         with open(image_path, 'wb') as image_file:
+    #             image_file.write(buffer.read())
+    #     else:
+    #         logger.debug('response status_code {}'.format(status_code))
+    #         return
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))

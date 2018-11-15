@@ -85,8 +85,9 @@ class NetCDF2kmlConverter(object):
         self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                              SECRET_KEY=myvars["Secret access key"],
                                              endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
-        print("CCI")
-        print(self.cci)
+        logger.debug("CCI")
+        logger.debug(self.cci)
+        logger.debug('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
         # s3 = boto3.resource('s3')
         # data = 'a big old string'
@@ -421,9 +422,9 @@ class NetCDF2kmlConverter(object):
         # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
 
 
-        print("CCI")
-        print(self.cci)
-        
+        logger.debug("CCI")
+        logger.debug(self.cci)
+
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
 
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],

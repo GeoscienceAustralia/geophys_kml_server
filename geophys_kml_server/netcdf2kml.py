@@ -94,11 +94,13 @@ class NetCDF2kmlConverter(object):
         self.dataset_type = dataset_type
         self.url_root = url_root
         
-        self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or 
-                          tempfile.gettempdir()),
-                          'kml_server_cache',
-                          dataset_type
-                          )
+        # self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
+        #                   tempfile.gettempdir()),
+        #                   'kml_server_cache',
+        #                   dataset_type
+        #                   )
+        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache/', dataset_type, dataset_metadata_dict['netcdf_basename'])
+        logger.debug("cached_dir: " + str(self.cache_dir))
         os.makedirs(self.cache_dir, exist_ok=True)
         
         logger.debug('Instantiating NetCDF2kmlConverter object for {} datasets'.format(dataset_type))
@@ -276,19 +278,20 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         '''
 
-        cache_path = os.path.join(self.cache_dir,
-                                  re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
+        # cache_path = os.path.join(self.cache_dir,
+        #                           re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
+        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
 
         # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
-        
+
+        cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
+
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
-                                     enable_disk_cache=self.cache_coordinates_locally,
+                                     enable_disk_cache=False,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
                                      s3_bucket=self.s3_bucket_name,
-                                     s3_path_key=s3_path_key,
                                      cci=self.cci,
                                      debug=self.debug
                                      )        
@@ -403,17 +406,17 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         """        
-        cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
+        # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
+        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
 
-        logger.debug(cache_path)
+        cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
+
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
                                        enable_disk_cache=self.cache_coordinates_locally,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
                                        enable_s3_cache=self.cache_coordinates_s3,
                                        s3_bucket=self.s3_bucket_name,
-                                       s3_path_key=s3_path_key,
                                        cci=self.cci,
                                        debug=self.debug
                                        )

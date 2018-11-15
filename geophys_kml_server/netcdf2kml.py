@@ -66,7 +66,8 @@ class NetCDF2kmlConverter(object):
         #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
         # else:
         #     self.memcached_connection = None
-        self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
+        #self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
+        self.s3_bucket_name = 'kml-server-cache'
         #self.s3_bucket_name = 'kml-server-cache'
         logger.debug(cottoncandy)
         logger.debug(self.s3_bucket_name)

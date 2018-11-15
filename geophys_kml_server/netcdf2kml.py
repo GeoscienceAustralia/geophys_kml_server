@@ -109,7 +109,7 @@ class NetCDF2kmlConverter(object):
         #     os.makedirs(self.cache_dir, mode=0777, exist_ok=True)
         # finally:
         #     os.umask(original_umask)
-
+        print("check")
         
         logger.debug('Instantiating NetCDF2kmlConverter object for {} datasets'.format(dataset_type))
         

@@ -99,7 +99,7 @@ class NetCDF2kmlConverter(object):
         #                   'kml_server_cache',
         #                   dataset_type
         #                   )
-        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache', dataset_type, dataset_metadata_dict['netcdf_basename'])
+        self.cache_dir = os.path.join('/tmp/kml_server_cache', dataset_type, dataset_metadata_dict['netcdf_basename'])
         logger.debug("cached_dir: " + str(self.cache_dir))
 
         #os.makedirs(self.cache_dir, exist_ok=True)

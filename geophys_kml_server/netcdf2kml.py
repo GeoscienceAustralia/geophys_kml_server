@@ -420,10 +420,9 @@ class NetCDF2kmlConverter(object):
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
 
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
-                                       enable_disk_cache=self.cache_coordinates_locally,
+                                       enable_disk_cache=self.cache_coordinates,
                                        enable_memory_cache=True,
                                        cache_path=cache_path,
-                                       enable_s3_cache=self.cache_coordinates_s3,
                                        s3_bucket=self.s3_bucket_name,
                                        cci=self.cci,
                                        debug=self.debug
@@ -554,7 +553,7 @@ class NetCDF2kmlConverter(object):
 
 
             if self.url_root:
-                if self.cache_images_locally or self.cache_images_s3:
+                if self.cache_images:
                     # Retrieve image for entire dataset
                     north = dataset_metadata_dict['latitude_max']
                     south = dataset_metadata_dict['latitude_min']
@@ -597,7 +596,7 @@ class NetCDF2kmlConverter(object):
 
 
             
-            if self.cache_images_locally and self.url_root:
+            if self.cache_images and self.url_root:
                 logger.debug("attempting to pull from LOCAL image cache -----------------")
                 # Cache image and mModify URL for cached image file
                 wms_url = '{}{}'.format(self.url_root,
@@ -608,7 +607,7 @@ class NetCDF2kmlConverter(object):
                     )
                 logger.debug('wms_url: {}'.format(wms_url))
 
-            if self.cache_images_s3 and self.url_root:
+            if self.s3_bucket_name is not None and self.url_root:
                 logger.debug("accessing s3 image cache -----------------")
                 s3_key_name = re.sub('/tmp/kml_server_cache/', '', self.cache_dir)
                 s3_key_name = "{0}/{1}".format(s3_key_name, os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png')

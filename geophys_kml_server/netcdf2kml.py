@@ -106,7 +106,7 @@ class NetCDF2kmlConverter(object):
 
         try:
             original_umask = os.umask(0)
-            os.makedirs(self.cache_dir, mode=0777, exist_ok=True)
+            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
         finally:
             os.umask(original_umask)
 

@@ -101,7 +101,7 @@ class NetCDF2kmlConverter(object):
         #                   )
         self.cache_dir = os.path.join('/tmp/kml_server_cache', dataset_type, dataset_metadata_dict['netcdf_basename'])
         logger.debug("cached_dir: " + str(self.cache_dir))
-
+        print('Hard coding in cache dir to test.')
         #os.makedirs(self.cache_dir, exist_ok=True)
 
         # try:

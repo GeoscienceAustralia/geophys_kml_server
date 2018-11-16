@@ -534,7 +534,16 @@ class NetCDF2kmlConverter(object):
         #                              debug=self.debug
         #                              )        
         #=======================================================================
-        
+
+        def get_s3_file_size(client, bucket, key):
+            logger.debug("key returning size list >>>>>>>>>>>>>>")
+            response = client.list_objects_v2(Bucket=bucket, Prefix=key)
+            for s3_obj in response.get('Contents', []):
+                logger.debug(s3_obj)
+                if s3_obj['Key'] == key:
+                    logger.debug(s3_obj['Size'])
+                    return s3_obj['Size']
+
         dataset_folder_kml = self.dataset_type_folder.newfolder(name=dataset_metadata_dict['dataset_title'], visibility=True)
 
         transparent_polygon = self.build_polygon(dataset_metadata_dict,
@@ -614,18 +623,23 @@ class NetCDF2kmlConverter(object):
                 print("s3_key_name: " + s3_key_name)
                 if self.s3_bucket_name is not None:
                     client = boto3.client('s3')
-                    try:
-                        logger.debug("attempting to pull from s3 image cache -----------------")
-                        b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
-                        t = b['Body'].read()
+                    s3 = boto3.resource('s3')
+                    if get_s3_file_size(client, self.s3_bucket_name, s3_key_name):
+
+                        bucket = s3.Bucket(self.s3_bucket_name)
+                        obj = bucket.Object(s3_key_name)
+
+                        # logger.debug("attempting to pull from s3 image cache -----------------")
+                        # b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
+                        # t = b['Body'].read()
 
 
                         import tempfile
                         tmp = tempfile.NamedTemporaryFile()
                         with open(tmp.name, 'wb') as f:
-                            wms_url = t.download_fileobj(f)
+                            wms_url = obj.download_fileobj(f)
 
-                    except:
+                    else:
                         logger.debug("building s3 image cache -----------------")
                         wms_url = '{}{}'.format(self.url_root,
 

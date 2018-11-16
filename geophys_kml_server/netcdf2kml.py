@@ -617,7 +617,11 @@ class NetCDF2kmlConverter(object):
                     try:
                         logger.debug("attempting to pull from s3 image cache -----------------")
                         b = client.get_object(Bucket="kml-server-cache", Key=s3_key_name)
-                        wms_url = b['Body'].read()
+                        image_binary_read = b['Body']
+                        import base64
+                        wms_url = base64.b64encode(image_binary_read.read())
+
+
                     except:
                         logger.debug("building s3 image cache -----------------")
                         wms_url = '{}{}'.format(self.url_root,

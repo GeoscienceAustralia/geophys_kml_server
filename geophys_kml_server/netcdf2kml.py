@@ -296,11 +296,12 @@ class NetCDF2kmlConverter(object):
 
         # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
         # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
-
+        logger.debug("CCI-----")
+        logger.debug(self.cci)
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
 
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
-                                     enable_disk_cache=False,
+                                     enable_disk_cache=True,
                                      enable_memory_cache=True,
                                      cache_path=cache_path,
                                      s3_bucket=self.s3_bucket_name,
@@ -422,7 +423,7 @@ class NetCDF2kmlConverter(object):
         # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
 
 
-        logger.debug("CCI")
+        logger.debug("CCI++++++++++")
         logger.debug(self.cci)
 
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])

@@ -159,6 +159,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         s3_object.put(Body=buffer)
 
 
+
     # if memcache and memcached_connection:
     #     if memcached_connection.get(image_path) is None: #TODO: Determine whether we can check for object existence without retrieving it
     #         status_code, buffer = get_image_buffer(image_source_url)

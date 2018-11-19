@@ -168,7 +168,6 @@ def main():
                      enable_disk_cache=True,
                      enable_memory_cache=True,
                      cache_path=cache_path,
-                     s3_path_key=s3_path_key,
                      s3_bucket=s3_bucket_name,
                      cci = cci,
                      debug=settings['global_settings']['debug']

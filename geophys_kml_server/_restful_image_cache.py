@@ -193,7 +193,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     if not os.path.isfile(image_path):
         try:
             original_umask = os.umask(0)
-            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
+            os.makedirs(cache_dir, mode=0o777, exist_ok=True)
         finally:
             os.umask(original_umask)
         status_code, buffer = get_image_buffer(image_source_url)
@@ -207,7 +207,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
-    logger.debug("KKKKKKKEEEEEEEEEEYYYYYYYYYY: " + key)
+    #logger.debug("KKKKKKKEEEEEEEEEEYYYYYYYYYY: " + key)
     #return key
     return cached_image_url_path
 

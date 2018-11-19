@@ -151,10 +151,11 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     # logger.debug('dataset_type: {}'.format(dataset_type))
     #
     image_dir = os.path.join(cache_dir, dataset_type)
-    # logger.debug('image dir: {}'.format(image_dir))
-    image_path = os.path.join(image_dir, image_basename)
+    logger.debug('image dir: {}'.format(image_dir))
+    image_path = os.path.join(cache_dir, image_basename)
+
     # key = os.path.join(dataset_type, image_basename)
-    # logger.debug('image_path: {}'.format(image_path))
+    logger.debug('image_path: {}'.format(image_path))
     # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
     # #logger.debug('s3_key_name: {}'.format(s3_key_name))
     # logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))
@@ -197,11 +198,12 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
         os.makedirs(cache_dir, mode=0o777, exist_ok=True)
 
         status_code, buffer = get_image_buffer(image_source_url)
-        logger.debug(buffer)
+        logger.debug(buffer.read())
         if status_code == 200 and buffer is not None:
             logger.debug('Saving image to {}'.format(image_path))
             with open(image_path, 'wb') as image_file:
                 image_file.write(buffer.read())
+                logger.debug(image_file)
         else:
             logger.debug('response status_code {}'.format(status_code))
             return

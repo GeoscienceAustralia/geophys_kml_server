@@ -197,6 +197,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
         os.makedirs(cache_dir, mode=0o777, exist_ok=True)
 
         status_code, buffer = get_image_buffer(image_source_url)
+        logger.debug(buffer)
         if status_code == 200 and buffer is not None:
             logger.debug('Saving image to {}'.format(image_path))
             with open(image_path, 'wb') as image_file:

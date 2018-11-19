@@ -145,31 +145,31 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
             
         return response.status_code, buffer
 
-    logger.debug("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-    logger.debug('dataset_type: {}'.format(dataset_type))
-
-    image_dir = os.path.join(cache_dir, dataset_type)
-    logger.debug('image dir: {}'.format(image_dir))
-    image_path = os.path.join(dataset_type, image_basename)
-    key = os.path.join(dataset_type, image_basename)
-    logger.debug('image_path: {}'.format(image_path))
-    #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
-    #logger.debug('s3_key_name: {}'.format(s3_key_name))
-    logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))
-    if s3_bucket_name is not None:
-
-        status_code, buffer = get_image_buffer(image_source_url)
-        logger.debug('status_code: {}'.format(status_code))
-
-        # logger.debug('buffer: {}'.format(buffer))
-        # logger.debug('buffer type: {}'.format(type(buffer)))
-        # logger.debug('buffer.read(): {}'.format(buffer.read()))
-        # logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
-        # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
-        # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
-        s3 = boto3.resource('s3')
-        s3_object = s3.Object('kml-server-cache', key)
-        s3_object.put(Body=buffer)
+    # logger.debug("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+    # logger.debug('dataset_type: {}'.format(dataset_type))
+    #
+    # image_dir = os.path.join(cache_dir, dataset_type)
+    # logger.debug('image dir: {}'.format(image_dir))
+    # image_path = os.path.join(dataset_type, image_basename)
+    # key = os.path.join(dataset_type, image_basename)
+    # logger.debug('image_path: {}'.format(image_path))
+    # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
+    # #logger.debug('s3_key_name: {}'.format(s3_key_name))
+    # logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))
+    # if s3_bucket_name is not None:
+    #
+    #     status_code, buffer = get_image_buffer(image_source_url)
+    #     logger.debug('status_code: {}'.format(status_code))
+    #
+    #     # logger.debug('buffer: {}'.format(buffer))
+    #     # logger.debug('buffer type: {}'.format(type(buffer)))
+    #     # logger.debug('buffer.read(): {}'.format(buffer.read()))
+    #     # logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
+    #     # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
+    #     # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
+    #     s3 = boto3.resource('s3')
+    #     s3_object = s3.Object('kml-server-cache', key)
+    #     s3_object.put(Body=buffer)
 
         # import tempfile
         # tmp = tempfile.NamedTemporaryFile()
@@ -190,21 +190,22 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     #             logger.debug('response status_code {}'.format(status_code))
     #             return
 
-    # if not os.path.isfile(image_path):
-    #     os.makedirs(image_dir, exist_ok=True)
-    #     status_code, buffer = get_image_buffer(image_source_url)
-    #     if status_code == 200 and buffer is not None:
-    #         logger.debug('Saving image to {}'.format(image_path))
-    #         with open(image_path, 'wb') as image_file:
-    #             image_file.write(buffer.read())
-    #     else:
-    #         logger.debug('response status_code {}'.format(status_code))
-    #         return
+    if not os.path.isfile(image_path):
+        os.makedirs(image_dir, exist_ok=True)
+        status_code, buffer = get_image_buffer(image_source_url)
+        if status_code == 200 and buffer is not None:
+            logger.debug('Saving image to {}'.format(image_path))
+            with open(image_path, 'wb') as image_file:
+                image_file.write(buffer.read())
+        else:
+            logger.debug('response status_code {}'.format(status_code))
+            return
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
     logger.debug("KKKKKKKEEEEEEEEEEYYYYYYYYYY: " + key)
-    return key
+    #return key
+    return cached_image_url_path
 
 
 

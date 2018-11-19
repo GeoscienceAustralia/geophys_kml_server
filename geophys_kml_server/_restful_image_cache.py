@@ -191,7 +191,11 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     #             return
 
     if not os.path.isfile(image_path):
-        os.makedirs(image_dir, exist_ok=True)
+        try:
+            original_umask = os.umask(0)
+            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
+        finally:
+            os.umask(original_umask)
         status_code, buffer = get_image_buffer(image_source_url)
         if status_code == 200 and buffer is not None:
             logger.debug('Saving image to {}'.format(image_path))

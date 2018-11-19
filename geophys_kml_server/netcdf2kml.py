@@ -556,8 +556,8 @@ class NetCDF2kmlConverter(object):
         transparent_polygon.style.polystyle.color = '03000000' # 99% transparent black
         transparent_polygon.style.polystyle.outline = 0  # remove the outline
         #transparent_polygon.style.linestyle.color = '80f8f8ff' # 50% transparent white
-
-        try:
+        if 1 is True:
+        #try:
             logger.debug("Dataset WEST extent: {}".format(dataset_metadata_dict['longitude_min']))
             logger.debug("BBOX WEST extent: {}".format(bounding_box[0]))
             logger.debug("Dataset EAST extent: {}".format(dataset_metadata_dict['longitude_max']))
@@ -709,9 +709,9 @@ class NetCDF2kmlConverter(object):
             logger.debug('ground_overlay_kml: {}'.format(ground_overlay_kml))
             return dataset_folder_kml
         
-        except Exception as e:
-            logger.debug('Unable to display thumbnail "{}": {}'.format(wms_url, e))
-            pass
+        #except Exception as e:
+            # logger.debug('Unable to display thumbnail "{}": {}'.format(wms_url, e))
+            # pass
 
     
 

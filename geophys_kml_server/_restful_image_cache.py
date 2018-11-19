@@ -41,8 +41,9 @@ print(tempfile.gettempdir())
 
 # cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or tempfile.gettempdir()),
 #                          '/tmp/kml_server_cache/')
-cache_dir = 'kml_server_cache'
-print(cache_dir)
+# cache_dir = 'kml_server_cache'
+# print(cache_dir)
+
 #os.makedirs(cache_dir, exist_ok=True)
 
 
@@ -64,6 +65,7 @@ class RestfulImageQuery(Resource):
         #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
         # else:
         #     self.memcached_connection = None
+
 
         
             
@@ -120,7 +122,7 @@ class RestfulImageQuery(Resource):
             return
 
 
-def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_name=None, s3_key_name=None):  #, memcached_connection=None):
+def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir:  #, memcached_connection=None):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path
@@ -193,7 +195,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     if not os.path.isfile(image_path):
         try:
             original_umask = os.umask(0)
-            os.makedirs(cache_dir, mode=0o777, exist_ok=True)
+            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
         finally:
             os.umask(original_umask)
         status_code, buffer = get_image_buffer(image_source_url)

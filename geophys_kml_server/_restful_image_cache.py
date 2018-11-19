@@ -152,7 +152,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     #
     image_dir = os.path.join(cache_dir, dataset_type)
     # logger.debug('image dir: {}'.format(image_dir))
-    image_path = os.path.join(dataset_type, image_basename)
+    image_path = os.path.join(image_dir, image_basename)
     # key = os.path.join(dataset_type, image_basename)
     # logger.debug('image_path: {}'.format(image_path))
     # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
@@ -209,7 +209,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
-    #logger.debug("KKKKKKKEEEEEEEEEEYYYYYYYYYY: " + key)
+
     #return key
     return cached_image_url_path
 

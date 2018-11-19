@@ -4,7 +4,7 @@ global_settings:
   log_file: '/tmp/kml_server.log'
   memcached_endpoint: #'kml-server-memcached.zetxvg.cfg.apse2.cache.amazonaws.com:11211' # set to None to not use memcached
   cache_coordinates: true
-  cache_images: true
+  cache_images: false
   http_compression: true # Set this to false for local use, true for remote
   compress_level: 6 # 6 = Maximum HTTP compression level
   compress_min_size: 2000 # Don't bother compressing small KML responses

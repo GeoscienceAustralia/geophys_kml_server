@@ -65,12 +65,8 @@ class RestfulImageQuery(Resource):
         #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
         # else:
         #     self.memcached_connection = None
-
-
-        
             
-            
-    def get(self, dataset_type):
+    def get(self, dataset_type, cache_dir):
         '''
         get method for RESTful API to retrieve cached images
         Needs to have "?image=<image_name>" parameter set

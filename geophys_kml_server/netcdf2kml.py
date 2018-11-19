@@ -655,6 +655,8 @@ class NetCDF2kmlConverter(object):
                         import tempfile
 
                         bucket = s3.Bucket(self.s3_bucket_name)
+                        logger.debug("BVAH")
+                        logger.debug(s3_key_name)
                         obj = bucket.Object(s3_key_name)
                         tmp = tempfile.NamedTemporaryFile()
                         logger.debug("and here")

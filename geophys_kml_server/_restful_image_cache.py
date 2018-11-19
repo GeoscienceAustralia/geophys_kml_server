@@ -160,12 +160,12 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         status_code, buffer = get_image_buffer(image_source_url)
         logger.debug('status_code: {}'.format(status_code))
 
-        logger.debug('buffer: {}'.format(buffer))
-        logger.debug('buffer type: {}'.format(type(buffer)))
-        logger.debug('buffer.read(): {}'.format(buffer.read()))
-        logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
-        logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
-        logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
+        # logger.debug('buffer: {}'.format(buffer))
+        # logger.debug('buffer type: {}'.format(type(buffer)))
+        # logger.debug('buffer.read(): {}'.format(buffer.read()))
+        # logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
+        # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
+        # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
         s3 = boto3.resource('s3')
         s3_object = s3.Object('kml-server-cache', image_path)
         s3_object.put(Body=buffer.getbuffer())
@@ -174,7 +174,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         # tmp = tempfile.NamedTemporaryFile()
         # with open(tmp.name, 'wb') as f:
         #     f.write(buffer.read())
-        #s3.upload_file(image_path, 'kml-server-cache', buffer)
+        # s3.upload_file(image_path, 'kml-server-cache', buffer)
         #s3_object.put(Body=buffer)
 
 

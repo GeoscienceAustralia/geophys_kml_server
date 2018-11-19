@@ -641,7 +641,7 @@ class NetCDF2kmlConverter(object):
 
                     else:
                         logger.debug("building s3 image cache -----------------")
-                        s3_key_name = '{}{}'.format(self.url_root,
+                        key = '{}{}'.format(self.url_root,
 
                                                 cache_image_file(dataset_type=self.dataset_type,
                                                                  image_basename=os.path.splitext(
@@ -656,8 +656,8 @@ class NetCDF2kmlConverter(object):
 
                         bucket = s3.Bucket(self.s3_bucket_name)
                         logger.debug("BVAH")
-                        logger.debug(s3_key_name)
-                        obj = bucket.Object(s3_key_name)
+                        logger.debug(key)
+                        obj = bucket.Object(key)
                         tmp = tempfile.NamedTemporaryFile()
                         logger.debug("and here")
                         with open(tmp.name, 'wb') as f:

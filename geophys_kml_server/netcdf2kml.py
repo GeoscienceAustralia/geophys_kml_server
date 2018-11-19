@@ -692,7 +692,7 @@ class NetCDF2kmlConverter(object):
 
             ground_overlay_kml = dataset_folder_kml.newgroundoverlay(name="Survey Thumbnail Image")
             #ground_overlay_kml.icon.href = wms_url
-            ground_overlay_kml.icon.href = tmp.name
+            ground_overlay_kml.icon.href = wms_url
             logger.debug('ground_overlay_kml.icon.href: {}'.format(ground_overlay_kml.icon.href))
             ground_overlay_kml.latlonbox.north = dataset_metadata_dict['latitude_max']
             ground_overlay_kml.latlonbox.south = dataset_metadata_dict['latitude_min']

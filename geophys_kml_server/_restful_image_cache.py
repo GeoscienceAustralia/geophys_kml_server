@@ -168,7 +168,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
         s3 = boto3.resource('s3')
         s3_object = s3.Object('kml-server-cache', image_path)
-        s3_object.put(Body=buffer.getbuffer())
+        s3_object.put(Body=buffer)
 
         # import tempfile
         # tmp = tempfile.NamedTemporaryFile()

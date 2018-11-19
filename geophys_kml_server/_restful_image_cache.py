@@ -122,7 +122,7 @@ class RestfulImageQuery(Resource):
             return
 
 
-def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir:  #, memcached_connection=None):
+def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir)  #, memcached_connection=None):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path
@@ -195,7 +195,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir: 
     if not os.path.isfile(image_path):
         try:
             original_umask = os.umask(0)
-            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
+            os.makedirs(cache_dir, mode=0o777, exist_ok=True)
         finally:
             os.umask(original_umask)
         status_code, buffer = get_image_buffer(image_source_url)

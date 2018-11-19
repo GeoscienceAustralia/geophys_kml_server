@@ -122,7 +122,7 @@ class RestfulImageQuery(Resource):
             return
 
 
-def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir)  #, memcached_connection=None):
+def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path

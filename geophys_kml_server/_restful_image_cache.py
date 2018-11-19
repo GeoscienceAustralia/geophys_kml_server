@@ -167,11 +167,13 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
 
         s3 = boto3.resource('s3')
         s3_object = s3.Object('kml-server-cache', image_path)
-        import tempfile
-        tmp = tempfile.NamedTemporaryFile()
-        with open(tmp.name, 'wb') as f:
-            f.write(buffer.read())
         s3_object.put(Body=buffer)
+
+        # import tempfile
+        # tmp = tempfile.NamedTemporaryFile()
+        # with open(tmp.name, 'wb') as f:
+        #     f.write(buffer.read())
+        # s3_object.put(Body=buffer)
 
 
 

@@ -641,17 +641,28 @@ class NetCDF2kmlConverter(object):
 
                     else:
                         logger.debug("building s3 image cache -----------------")
-                        key = '{}{}'.format(self.url_root,
+                        # key = '{}{}'.format(self.url_root,
+                        #
+                        #                         cache_image_file(dataset_type=self.dataset_type,
+                        #                                          image_basename=os.path.splitext(
+                        #                                              dataset_metadata_dict['netcdf_basename'])[
+                        #                                                             0] + '.png',
+                        #                                          image_source_url=wms_url,
+                        #                                          s3_bucket_name=self.s3_bucket_name,
+                        #                                          s3_key_name=s3_key_name
+                        #                                          )
+                        #                         )
 
-                                                cache_image_file(dataset_type=self.dataset_type,
-                                                                 image_basename=os.path.splitext(
-                                                                     dataset_metadata_dict['netcdf_basename'])[
-                                                                                    0] + '.png',
-                                                                 image_source_url=wms_url,
-                                                                 s3_bucket_name=self.s3_bucket_name,
-                                                                 s3_key_name=s3_key_name
-                                                                 )
-                                                )
+                        key = cache_image_file(dataset_type=self.dataset_type,
+                                                             image_basename=os.path.splitext(
+                                                                 dataset_metadata_dict['netcdf_basename'])[
+                                                                                0] + '.png',
+                                                             image_source_url=wms_url,
+                                                             s3_bucket_name=self.s3_bucket_name,
+                                                             s3_key_name=s3_key_name
+                                                             )
+
+
                         import tempfile
 
                         bucket = s3.Bucket(self.s3_bucket_name)

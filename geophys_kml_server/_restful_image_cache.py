@@ -73,7 +73,7 @@ class RestfulImageQuery(Resource):
         '''
         logger.debug('dataset_type: {}'.format(dataset_type))
         
-        image_dir = os.path.join('/tmp/kml_server_cache1', dataset_type)
+        image_dir = os.path.join('/tmp/kml_server_cache', dataset_type)
         
         #=======================================================================
         # dataset_settings = settings['dataset_settings'].get(dataset_type)

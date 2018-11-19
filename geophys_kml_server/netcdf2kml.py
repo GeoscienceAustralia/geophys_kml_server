@@ -103,7 +103,7 @@ class NetCDF2kmlConverter(object):
         #                   'kml_server_cache',
         #                   dataset_type
         #                   )
-        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache', dataset_type)
+        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache1', dataset_type)
         logger.debug("cached_dir: " + str(self.cache_dir))
         print('Hard coding in cache dir to test.')
         #os.makedirs(self.cache_dir, exist_ok=True)

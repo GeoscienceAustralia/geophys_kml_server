@@ -653,11 +653,14 @@ class NetCDF2kmlConverter(object):
                                                                  )
                                                 )
                         import tempfile
+
                         bucket = s3.Bucket(self.s3_bucket_name)
                         obj = bucket.Object(s3_key_name)
                         tmp = tempfile.NamedTemporaryFile()
+                        logger.debug("and here")
                         with open(tmp.name, 'wb') as f:
                             obj.download_fileobj(f)
+                        logger.debug("???")
 
             elif self.cache_images and self.url_root:
                 logger.debug("attempting to pull from LOCAL image cache -----------------")

@@ -66,14 +66,14 @@ class RestfulImageQuery(Resource):
         # else:
         #     self.memcached_connection = None
             
-    def get(self, dataset_type, cache_dir):
+    def get(self, dataset_type):
         '''
         get method for RESTful API to retrieve cached images
         Needs to have "?image=<image_name>" parameter set
         '''
         logger.debug('dataset_type: {}'.format(dataset_type))
         
-        image_dir = os.path.join(cache_dir, dataset_type)
+        image_dir = os.path.join('/tmp/kml_server_cache1', dataset_type)
         
         #=======================================================================
         # dataset_settings = settings['dataset_settings'].get(dataset_type)

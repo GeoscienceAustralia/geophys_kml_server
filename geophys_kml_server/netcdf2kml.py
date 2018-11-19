@@ -637,11 +637,11 @@ class NetCDF2kmlConverter(object):
                         import tempfile
                         tmp = tempfile.NamedTemporaryFile()
                         with open(tmp.name, 'wb') as f:
-                            wms_url = obj.download_fileobj(f)
+                            obj.download_fileobj(f)
 
                     else:
                         logger.debug("building s3 image cache -----------------")
-                        wms_url = '{}{}'.format(self.url_root,
+                        s3_key_name = '{}{}'.format(self.url_root,
 
                                                 cache_image_file(dataset_type=self.dataset_type,
                                                                  image_basename=os.path.splitext(
@@ -652,6 +652,12 @@ class NetCDF2kmlConverter(object):
                                                                  s3_key_name=s3_key_name
                                                                  )
                                                 )
+                        import tempfile
+                        bucket = s3.Bucket(self.s3_bucket_name)
+                        obj = bucket.Object(s3_key_name)
+                        tmp = tempfile.NamedTemporaryFile()
+                        with open(tmp.name, 'wb') as f:
+                            obj.download_fileobj(f)
 
             elif self.cache_images and self.url_root:
                 logger.debug("attempting to pull from LOCAL image cache -----------------")
@@ -669,7 +675,8 @@ class NetCDF2kmlConverter(object):
             logger.debug('wms_url: {}'.format(wms_url))
 
             ground_overlay_kml = dataset_folder_kml.newgroundoverlay(name="Survey Thumbnail Image")
-            ground_overlay_kml.icon.href = wms_url
+            #ground_overlay_kml.icon.href = wms_url
+            ground_overlay_kml.icon.href = tmp.name
             
             ground_overlay_kml.latlonbox.north = dataset_metadata_dict['latitude_max']
             ground_overlay_kml.latlonbox.south = dataset_metadata_dict['latitude_min']

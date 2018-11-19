@@ -148,9 +148,9 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     # logger.debug("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
     # logger.debug('dataset_type: {}'.format(dataset_type))
     #
-    # image_dir = os.path.join(cache_dir, dataset_type)
+    image_dir = os.path.join(cache_dir, dataset_type)
     # logger.debug('image dir: {}'.format(image_dir))
-    # image_path = os.path.join(dataset_type, image_basename)
+    image_path = os.path.join(dataset_type, image_basename)
     # key = os.path.join(dataset_type, image_basename)
     # logger.debug('image_path: {}'.format(image_path))
     # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)

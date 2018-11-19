@@ -151,6 +151,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
     image_dir = os.path.join(cache_dir, dataset_type)
     logger.debug('image dir: {}'.format(image_dir))
     image_path = os.path.join(dataset_type, image_basename)
+    key = os.path.join(dataset_type, image_basename)
     logger.debug('image_path: {}'.format(image_path))
     #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
     #logger.debug('s3_key_name: {}'.format(s3_key_name))
@@ -167,7 +168,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
         # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
         # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
         s3 = boto3.resource('s3')
-        s3_object = s3.Object('kml-server-cache', image_path)
+        s3_object = s3.Object('kml-server-cache', key)
         s3_object.put(Body=buffer)
 
         # import tempfile
@@ -202,8 +203,8 @@ def cache_image_file(dataset_type, image_basename, image_source_url, s3_bucket_n
 
     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
-
-    return image_path
+    logger.debug("KKKKKKKEEEEEEEEEEYYYYYYYYYY: " + key)
+    return key
 
 
 

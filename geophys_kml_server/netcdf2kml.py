@@ -70,26 +70,9 @@ class NetCDF2kmlConverter(object):
                 print(myvars)
         print(myvars["Access key ID"])
         print(cottoncandy)
-        self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
-                                             SECRET_KEY=myvars["Secret access key"],
-                                             endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
+
         self.dataset_type = dataset_type
         self.url_root = url_root
-        
-        # self.cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
-        #                   tempfile.gettempdir()),
-        #                   'kml_server_cache',
-        #                   dataset_type
-        #                   )
-        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache1', dataset_type)
-        #os.makedirs(self.cache_dir, exist_ok=True)
-
-        try:
-            original_umask = os.umask(0)
-            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
-        finally:
-            os.umask(original_umask)
-
         
         logger.debug('Instantiating NetCDF2kmlConverter object for {} datasets'.format(dataset_type))
         
@@ -103,6 +86,19 @@ class NetCDF2kmlConverter(object):
         logger.debug('combined_settings: {}'.format(combined_settings))        
         for key, value in combined_settings.items():
             setattr(self, key, value)
+
+
+        self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
+                                             SECRET_KEY=myvars["Secret access key"],
+                                             endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
+        self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache', dataset_type)
+        #os.makedirs(self.cache_dir, exist_ok=True)
+
+        try:
+            original_umask = os.umask(0)
+            os.makedirs(self.cache_dir, mode=0o777, exist_ok=True)
+        finally:
+            os.umask(original_umask)
             
         # Dict of KML buiding functions keyed by dataset form
         self.build_kml_functions = {'polygon': self.build_polygon,

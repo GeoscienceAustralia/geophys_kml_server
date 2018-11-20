@@ -64,7 +64,7 @@ def main():
                                   tempfile.gettempdir()),
                                  'kml_server_cache',
                                  dataset_type)
-        if dataset_format not in ['point', 'line']:
+        if dataset_format not in ['line']:
         #if dataset_format not in ['line']:
             continue
         if s3_bucket_name is None:

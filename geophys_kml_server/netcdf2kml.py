@@ -62,18 +62,6 @@ class NetCDF2kmlConverter(object):
         self._debug = None
         self.debug = debug
 
-        # if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
-        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        # else:
-        #     self.memcached_connection = None
-        #self.s3_bucket_name = settings['global_settings']['s3_bucket_name']
-        self.s3_bucket_name = 'kml-server-cache'
-        #self.s3_bucket_name = 'kml-server-cache'
-        logger.debug(cottoncandy)
-        logger.debug(self.s3_bucket_name)
-        #self.cci = cottoncandy.get_interface(self.s3_bucket_name, endpoint_url='https://s3.amazonaws.com')
-
-
         myvars = {}
         with open("/var/www/html/keys") as myfile:
             for line in myfile:
@@ -85,16 +73,6 @@ class NetCDF2kmlConverter(object):
         self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                              SECRET_KEY=myvars["Secret access key"],
                                              endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
-        logger.debug("CCI")
-        logger.debug(self.cci)
-        logger.debug('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
-        # s3 = boto3.resource('s3')
-        # data = 'a big old string'
-        # s3.Bucket('kml-server-cache').put_object(Key='test_from_script', Body=data)
-
-
-
         self.dataset_type = dataset_type
         self.url_root = url_root
         
@@ -104,8 +82,6 @@ class NetCDF2kmlConverter(object):
         #                   dataset_type
         #                   )
         self.cache_dir = os.path.join(settings['global_settings'].get('cache_root_dir'), 'kml_server_cache1', dataset_type)
-        logger.debug("cached_dir: " + str(self.cache_dir))
-        print('Hard coding in cache dir to test.')
         #os.makedirs(self.cache_dir, exist_ok=True)
 
         try:
@@ -290,14 +266,6 @@ class NetCDF2kmlConverter(object):
         @return: Dataset folder under parent folder
         '''
 
-        # cache_path = os.path.join(self.cache_dir,
-        #                           re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
-
-        # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache.nc', dataset_metadata_dict['netcdf_basename']))
-        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
-        logger.debug("CCI-----")
-        logger.debug(self.cci)
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
 
         line_utils = NetCDFLineUtils(dataset_metadata_dict['netcdf_path'],
@@ -321,10 +289,7 @@ class NetCDF2kmlConverter(object):
                     break
                 else:
                     height_variable = None
-                  
-        #dataset_folder_kml.style = self.dataset_type_folder.style
-        #dataset_folder_kml.style = self.line_style
-    
+
         dataset_folder_kml = None
         
         visible_line_count = 0
@@ -333,8 +298,7 @@ class NetCDF2kmlConverter(object):
                                                            bounds=bounding_box,
                                                            subsampling_distance=subsampling_distance
                                                            ):
-            #logger.debug("line_number: {}".format(line_number))
-            #logger.debug("line_data: {}".format(line_data))
+
             points_in_subset = len(line_data['coordinates'])
             if points_in_subset:
                 visible_line_count += 1
@@ -359,7 +323,7 @@ class NetCDF2kmlConverter(object):
                     subset_array[:,2] = line_data[height_variable] # Height above ground
                     
                     line_string.altitudemode = simplekml.AltitudeMode.relativetoground
-                else: # 2D
+                else:  # 2D
                     subset_array = line_data['coordinates']
                     line_string.altitudemode = simplekml.AltitudeMode.clamptoground
                     
@@ -376,28 +340,6 @@ class NetCDF2kmlConverter(object):
                     dataset_metadata_dict['dataset_link']))
                 description_string = description_string + ']]>'
                 line_string.description = description_string
-               
-                # # # touring
-                # tour = kml.newgxtour(name="Play me!")
-                # playlist = tour.newgxplaylist()
-                #
-                # soundcue = playlist.newgxsoundcue()
-                # soundcue.href = "http://code.google.com/p/simplekml/source/browse/samples/drum_roll_1.wav"
-                # soundcue.gxdelayedstart = 2
-                #
-                # animatedupdate = playlist.newgxanimatedupdate(gxduration=6.5)
-                # animatedupdate.update.change = '<IconStyle targetId="{0}"><scale>10.0</scale></IconStyle>'.format(
-                #     pnt.style.iconstyle.id)
-                #
-                # flyto = playlist.newgxflyto(gxduration=4.1)
-                # flyto.camera.longitude = 170.157
-                # flyto.camera.latitude = -43.671
-                # flyto.camera.altitude = 9700
-                # flyto.camera.heading = -6.333
-                # flyto.camera.tilt = 33.5
-                # flyto.camera.roll = 0
-
-                # wait = playlist.newgxwait(gxduration=2.4)
 
             else:
                 logger.debug("line doesn't have any points in view")
@@ -419,13 +361,6 @@ class NetCDF2kmlConverter(object):
         @param visibilty: Boolean flag indicating whether dataset geometry should be visible
         @return: Dataset folder under parent folder
         """        
-        # cache_path=os.path.join(self.cache_dir, re.sub('\.nc$', '_cache_xycoords_narray', dataset_metadata_dict['netcdf_basename']))
-        # s3_path_key = "{}/{}".format(self.dataset_type, dataset_metadata_dict['netcdf_basename'])
-
-
-        logger.debug("CCI++++++++++")
-        logger.debug(self.cci)
-
         cache_path = os.path.join(self.cache_dir, dataset_metadata_dict['netcdf_basename'])
 
         point_utils = NetCDFPointUtils(dataset_metadata_dict['netcdf_path'],
@@ -438,7 +373,6 @@ class NetCDF2kmlConverter(object):
                                        )
 
         spatial_mask = point_utils.get_spatial_mask(bounding_box)
-        #logger.debug('spatial_mask: {}'.format(spatial_mask))
         if not np.any(spatial_mask):
             logger.debug('No points in view')
             return
@@ -535,14 +469,14 @@ class NetCDF2kmlConverter(object):
         #                              )        
         #=======================================================================
 
-        def get_s3_file_size(client, bucket, key):
-            logger.debug("key returning size list >>>>>>>>>>>>>>")
-            response = client.list_objects_v2(Bucket=bucket, Prefix=key)
-            for s3_obj in response.get('Contents', []):
-                logger.debug(s3_obj)
-                if s3_obj['Key'] == key:
-                    logger.debug(s3_obj['Size'])
-                    return s3_obj['Size']
+        # def get_s3_file_size(client, bucket, key):
+        #     logger.debug("key returning size list >>>>>>>>>>>>>>")
+        #     response = client.list_objects_v2(Bucket=bucket, Prefix=key)
+        #     for s3_obj in response.get('Contents', []):
+        #         logger.debug(s3_obj)
+        #         if s3_obj['Key'] == key:
+        #             logger.debug(s3_obj['Size'])
+        #             return s3_obj['Size']
 
         dataset_folder_kml = self.dataset_type_folder.newfolder(name=dataset_metadata_dict['dataset_title'], visibility=True)
 
@@ -687,8 +621,6 @@ class NetCDF2kmlConverter(object):
                     )
                 logger.debug('wms_url: {}'.format(wms_url))
 
-
-
             logger.debug('wms_url: {}'.format(wms_url))
 
             ground_overlay_kml = dataset_folder_kml.newgroundoverlay(name="Survey Thumbnail Image")
@@ -714,7 +646,6 @@ class NetCDF2kmlConverter(object):
             logger.debug('Unable to display thumbnail "{}": {}'.format(wms_url, e))
             pass
 
-    
 
     def build_html_description_string(self, dataset_metadata_dict, variable_attributes, point_data):
         """

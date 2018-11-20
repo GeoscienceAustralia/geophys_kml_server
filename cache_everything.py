@@ -122,8 +122,6 @@ def main():
 
                 print('\tCaching image {} from {}'.format(image_basename, wms_url))
                 s3_key_name = re.sub('/tmp/kml_server_cache/', '', cache_dir)
-                #s3_key_name = re.sub('?image=', '', s3_key_name)
-                print("s3_key_name" + str(s3_key_name))
                 cached_image_url_path = cache_image_file(dataset_type, image_basename, wms_url, s3_bucket_name, s3_key_name)
 
                 print('\t\tImage URL: {}'.format(cached_image_url_path))
@@ -148,12 +146,8 @@ def main():
                 #      cci = cci,
                 #      debug=settings['global_settings']['debug']
                 #      )
-                print("HERE")
-                print("s3_bucket_name: " + str(s3_bucket_name))
-                print("cci: " + str(cci))
-                print("s3_path_key: " + str(s3_path_key))
-                print("cache_path: " + str(cache_path))
-                key_with_xycoords = re.sub('.nc', "_xycoords_narray", s3_path_key)
+
+               # key_with_xycoords = re.sub('.nc', "_xycoords_narray", s3_path_key)
                 # print(key_with_xycoords)
                 # for l in list_of_objects:
                 #     #print(str(l))
@@ -164,6 +158,7 @@ def main():
                 #         continue
                 #
                 # print('key not found')
+
                 netcdf_util = NetCDFPointUtils(distribution_url,
                      enable_disk_cache=True,
                      enable_memory_cache=True,

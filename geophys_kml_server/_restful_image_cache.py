@@ -35,9 +35,7 @@ logger.debug('Logger {} set to level {}'.format(logger.name, logger.level))
 # This is used to define the path for the RESTful API, and also to set the URL prefix in cache_image_file()
 image_url_path = '/images/<string:dataset_type>'
 
-print("HERE")
-print(settings['global_settings'].get('cache_root_dir'))
-print(tempfile.gettempdir())
+
 
 # cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or tempfile.gettempdir()),
 #                          '/tmp/kml_server_cache/')
@@ -147,11 +145,11 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     # logger.debug('dataset_type: {}'.format(dataset_type))
     #
     image_dir = os.path.join(cache_dir, dataset_type)
-    logger.debug('image dir: {}'.format(image_dir))
+    #logger.debug('image dir: {}'.format(image_dir))
     image_path = os.path.join(cache_dir, image_basename)
 
     # key = os.path.join(dataset_type, image_basename)
-    logger.debug('image_path: {}'.format(image_path))
+    #logger.debug('image_path: {}'.format(image_path))
     # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
     # #logger.debug('s3_key_name: {}'.format(s3_key_name))
     # logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))

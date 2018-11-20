@@ -35,11 +35,6 @@ import boto3
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# try:
-#     import memcache
-# except ModuleNotFoundError:
-#     logger.warning('Unable to import memcache. AWS-specific functionality will not be enabled')
-#     memcache = None
 try:
     import cottoncandy
 except Exception as e:

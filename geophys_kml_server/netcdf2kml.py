@@ -73,7 +73,7 @@ class NetCDF2kmlConverter(object):
 
         self.dataset_type = dataset_type
         self.url_root = url_root
-        
+
         logger.debug('Instantiating NetCDF2kmlConverter object for {} datasets'.format(dataset_type))
         
         # Create combined full settings dict and set instance attributes

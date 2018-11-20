@@ -159,14 +159,14 @@ def main():
                 #
                 # print('key not found')
 
-                netcdf_util = NetCDFPointUtils(distribution_url,
-                     enable_disk_cache=True,
-                     enable_memory_cache=True,
-                     cache_path=cache_path,
-                     s3_bucket=s3_bucket_name,
-                     cci = cci,
-                     debug=settings['global_settings']['debug']
-                     )
+                # netcdf_util = NetCDFPointUtils(distribution_url,
+                #      enable_disk_cache=True,
+                #      enable_memory_cache=True,
+                #      cache_path=cache_path,
+                #      s3_bucket=s3_bucket_name,
+                #      cci = cci,
+                #      debug=settings['global_settings']['debug']
+                #      )
 
                 netcdf_util2 = NetCDFLineUtils(distribution_url,
                      enable_disk_cache=True,
@@ -180,7 +180,8 @@ def main():
                 print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 
                 if dataset_format == 'line':
-                    print('\t\tCached {} lines'.format(len(netcdf_util2.line))) # Cause line & line_index to be cached
+                    #print('\t\tCached {} lines'.format(len(netcdf_util2.line))) # Cause line & line_index to be cached
+                    print('\t\tCached {} line indexs'.format(len(netcdf_util2.line_index))) # Cause line & line_index to be cached
                     
                 netcdf_util.netcdf_dataset.close()
             except BaseException as e:

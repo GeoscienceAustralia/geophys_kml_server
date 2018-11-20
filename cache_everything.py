@@ -177,7 +177,7 @@ def main():
                      debug=settings['global_settings']['debug']
                      )
 
-                print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
+                #print('\t\tCached {} points'.format(len(netcdf_util.xycoords))) # Cause xycoords to be cached
                 
                 if dataset_format == 'line':
                     #print('\t\tCached {} lines'.format(len(netcdf_util2.line))) # Cause line & line_index to be cached

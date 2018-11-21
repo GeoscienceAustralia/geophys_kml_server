@@ -126,4 +126,3 @@ key = False
 " > /root/.config/cottoncandy/options.cfg
 
 apachectl restart
-

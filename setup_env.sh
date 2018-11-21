@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
- su -
+su -
 
 apt-get update
 apt install python3-pip
@@ -84,10 +84,6 @@ echo "<VirtualHost *:80>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 " > /etc/apache2/sites-enabled/000-default.conf
-
-
-export PYTHONPATH=/var/www/html/geophys_kml_server
-
 
 # Increase the upload and download limits in cottoncandy settings
 echo "access_key = False

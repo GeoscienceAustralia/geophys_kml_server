@@ -147,7 +147,7 @@ dataset_settings:
     wms_pixel_size: 0.01
   magnetic_lines:
     dataset_format: line
-    min_polygon_bbox_width: 0.5 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
+    min_polygon_bbox_width: 0.5  # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [line, TMI, magnetic, airborne, geophysics]
     dataset_type_name: Magnetic Line Surveys
     netcdf_path_prefix: null #C:\Temp\Geophysics\magnetic_line # Local directory containing files. Use null to use OPeNDAP

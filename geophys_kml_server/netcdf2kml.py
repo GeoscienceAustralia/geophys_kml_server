@@ -62,9 +62,6 @@ class NetCDF2kmlConverter(object):
             for line in myfile:
                 name, var = line.partition("=")[::2]
                 myvars[name.strip()] = var.strip('\n')
-                print(myvars)
-        print(myvars["Access key ID"])
-        print(cottoncandy)
 
         self.dataset_type = dataset_type
         self.url_root = url_root
@@ -333,7 +330,7 @@ class NetCDF2kmlConverter(object):
                 line_string.description = description_string
 
             else:
-                logger.debug("line doesn't have any points in view")
+                logger.debug("Line {} does not have any points in view".format(line_number))
            
         line_utils.close() # Explicitly close netCDF file
         

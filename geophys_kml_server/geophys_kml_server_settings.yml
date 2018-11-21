@@ -84,7 +84,7 @@ dataset_settings:
     timestamp_detail_view: true
   magnetic_grids:
     dataset_format: grid
-    min_polygon_bbox_width: 150.0 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
+    min_polygon_bbox_width: 180.0 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [NCI, geophysical survey, airborne digital data, magnetics, grid]
     dataset_type_name: Magnetic Survey grids
     netcdf_path_prefix: null #C:\Temp\Geophysics\magnetic grids # Local directory containing files. Use null to use OPeNDAP
@@ -99,7 +99,7 @@ dataset_settings:
     wms_color_range: [-350, 350]
   potassium_grids:
     dataset_format: grid
-    min_polygon_bbox_width: 150.0 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
+    min_polygon_bbox_width: 180.0 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [NCI, geophysical survey, airborne digital data, radiometrics, potassium, grid]
     dataset_type_name: Potassium Survey grids
     netcdf_path_prefix: null #C:\Temp\Geophysics\radiometric grids # Local directory containing files. Use null to use OPeNDAP
@@ -147,7 +147,7 @@ dataset_settings:
     wms_pixel_size: 0.01
   magnetic_lines:
     dataset_format: line
-    min_polygon_bbox_width: 0.5 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
+    min_polygon_bbox_width: 0.4 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [line, TMI, magnetic, airborne, geophysics]
     dataset_type_name: Magnetic Line Surveys
     netcdf_path_prefix: null #C:\Temp\Geophysics\magnetic_line # Local directory containing files. Use null to use OPeNDAP
@@ -163,7 +163,7 @@ dataset_settings:
     timestamp_detail_view: true
   radiometric_lines:
     dataset_format: line
-    min_polygon_bbox_width: 0.5 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
+    min_polygon_bbox_width: 0.4 # maximum bounding box width for detailed display. Uses survey convex-hull polygons for anything larger.
     keyword_list: [line, radiometrics, airborne, geophysics]
     dataset_type_name: Radiometric Line Surveys
     netcdf_path_prefix: null #C:\Temp\Geophysics\radiometric_line # Local directory containing files. Use null to use OPeNDAP

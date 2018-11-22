@@ -35,17 +35,11 @@ logger.debug('Logger {} set to level {}'.format(logger.name, logger.level))
 # This is used to define the path for the RESTful API, and also to set the URL prefix in cache_image_file()
 image_url_path = '/images/<string:dataset_type>'
 
-
-
-# cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or tempfile.gettempdir()),
-#                          '/tmp/kml_server_cache/')
-# cache_dir = 'kml_server_cache'
-# print(cache_dir)
-
-#os.makedirs(cache_dir, exist_ok=True)
-
-
-
+cache_dir = os.path.join((settings['global_settings'].get('cache_root_dir') or
+                          tempfile.gettempdir()),
+                          'kml_server_cache'
+                          )
+os.makedirs(cache_dir, exist_ok=True)
 
 class RestfulImageQuery(Resource):
     '''
@@ -59,11 +53,7 @@ class RestfulImageQuery(Resource):
         '''
         super(RestfulImageQuery, self).__init__()
         
-        # if memcache is not None and settings['global_settings'].get('memcached_endpoint') is not None:
-        #     self.memcached_connection = memcache.Client([settings['global_settings']['memcached_endpoint']], debug=0)
-        # else:
-        #     self.memcached_connection = None
-            
+
     def get(self, dataset_type):
         '''
         get method for RESTful API to retrieve cached images
@@ -115,8 +105,7 @@ class RestfulImageQuery(Resource):
             logger.debug('Image file {} does not exist'.format(image_path))
             return
 
-
-def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
+def cache_image_file(dataset_type, image_basename, image_source_url):
     '''
     Function to retrieve image from image_source_url, and save it into file
     @param dataset_type: String indicating dataset type - used in creating URL path
@@ -124,80 +113,111 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     @param image_source_url: Source URL for image (probably WMS query)
     @return cached_image_url_path: URL path to cached image. Will be appended to server string
     '''
-    def get_image_buffer(image_source_url):
-        '''
-        Helper function to return an in-memory buffer containing the requested image, or None for failure
-        '''
-        buffer = None
-        logger.debug('Retrieving image from {}'.format(image_source_url))
-        response = requests.get(image_source_url, stream=True)
-        if response.status_code == 200:
-            buffer = BytesIO()
-            
-            for chunk in response:
-                buffer.write(chunk)
-                    
-            buffer.seek(0)
-            
-        return response.status_code, buffer
+    logger.debug('dataset_type: {}'.format(dataset_type))
 
-    # logger.debug("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
-    # logger.debug('dataset_type: {}'.format(dataset_type))
-    #
     image_dir = os.path.join(cache_dir, dataset_type)
-    #logger.debug('image dir: {}'.format(image_dir))
+
     image_path = os.path.join(image_dir, image_basename)
 
-    # key = os.path.join(dataset_type, image_basename)
-    #logger.debug('image_path: {}'.format(image_path))
-    # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
-    # #logger.debug('s3_key_name: {}'.format(s3_key_name))
-    # logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))
-    # if s3_bucket_name is not None:
-    #
-    #     status_code, buffer = get_image_buffer(image_source_url)
-    #     logger.debug('status_code: {}'.format(status_code))
-    #
-    #     # logger.debug('buffer: {}'.format(buffer))
-    #     # logger.debug('buffer type: {}'.format(type(buffer)))
-    #     # logger.debug('buffer.read(): {}'.format(buffer.read()))
-    #     # logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
-    #     # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
-    #     # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
-    #     s3 = boto3.resource('s3')
-    #     s3_object = s3.Object('kml-server-cache', key)
-    #     s3_object.put(Body=buffer)
-
-        # import tempfile
-        # tmp = tempfile.NamedTemporaryFile()
-        # with open(tmp.name, 'wb') as f:
-        #     f.write(buffer.read())
-        # s3.upload_file(image_path, 'kml-server-cache', buffer)
-        #s3_object.put(Body=buffer)
-
-
-
     if not os.path.isfile(image_path):
-
-        os.makedirs(cache_dir, mode=0o777, exist_ok=True)
-
-        status_code, buffer = get_image_buffer(image_source_url)
-        logger.debug(buffer.read())
-        if status_code == 200 and buffer is not None:
-            logger.debug('Saving image to {}'.format(image_path))
+        os.makedirs(image_dir, exist_ok=True)
+        logger.debug('Saving image {} from {}'.format(image_path, image_source_url))
+        response = requests.get(image_source_url, stream=True)
+        if response.status_code == 200:
             with open(image_path, 'wb') as image_file:
-                image_file.write(buffer.read())
-                logger.debug(image_file)
+                for chunk in response:
+                    image_file.write(chunk)
         else:
-            logger.debug('response status_code {}'.format(status_code))
+            logger.debug('response.status_code {}'.format(response.status_code))
             return
 
-    cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
+    cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path) + '?image=' + image_basename
     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
 
-    #return key
     return cached_image_url_path
-
-
+#
+# def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
+#     '''
+#     Function to retrieve image from image_source_url, and save it into file
+#     @param dataset_type: String indicating dataset type - used in creating URL path
+#     @param image_basename: Base name for image file
+#     @param image_source_url: Source URL for image (probably WMS query)
+#     @return cached_image_url_path: URL path to cached image. Will be appended to server string
+#     '''
+#     def get_image_buffer(image_source_url):
+#         '''
+#         Helper function to return an in-memory buffer containing the requested image, or None for failure
+#         '''
+#         buffer = None
+#         logger.debug('Retrieving image from {}'.format(image_source_url))
+#         response = requests.get(image_source_url, stream=True)
+#         if response.status_code == 200:
+#             buffer = BytesIO()
+#
+#             for chunk in response:
+#                 buffer.write(chunk)
+#
+#             buffer.seek(0)
+#
+#         return response.status_code, buffer
+#
+#     # logger.debug("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>")
+#     # logger.debug('dataset_type: {}'.format(dataset_type))
+#     #
+#     image_dir = os.path.join(cache_dir, dataset_type)
+#     #logger.debug('image dir: {}'.format(image_dir))
+#     image_path = os.path.join(image_dir, image_basename)
+#
+#     # key = os.path.join(dataset_type, image_basename)
+#     #logger.debug('image_path: {}'.format(image_path))
+#     # #s3_key_name = "{0}/{1}".format(s3_key_name, image_basename)
+#     # #logger.debug('s3_key_name: {}'.format(s3_key_name))
+#     # logger.debug('s3_bucket_name: {}'.format(s3_bucket_name))
+#     # if s3_bucket_name is not None:
+#     #
+#     #     status_code, buffer = get_image_buffer(image_source_url)
+#     #     logger.debug('status_code: {}'.format(status_code))
+#     #
+#     #     # logger.debug('buffer: {}'.format(buffer))
+#     #     # logger.debug('buffer type: {}'.format(type(buffer)))
+#     #     # logger.debug('buffer.read(): {}'.format(buffer.read()))
+#     #     # logger.debug('buffer.read() type: {}'.format(type(buffer.read())))
+#     #     # logger.debug('buffer.getbuffer(): {}'.format(buffer.getbuffer()))
+#     #     # logger.debug('buffer.getbuffer()) type: {}'.format(type(buffer.getbuffer())))
+#     #     s3 = boto3.resource('s3')
+#     #     s3_object = s3.Object('kml-server-cache', key)
+#     #     s3_object.put(Body=buffer)
+#
+#         # import tempfile
+#         # tmp = tempfile.NamedTemporaryFile()
+#         # with open(tmp.name, 'wb') as f:
+#         #     f.write(buffer.read())
+#         # s3.upload_file(image_path, 'kml-server-cache', buffer)
+#         #s3_object.put(Body=buffer)
+#
+#
+#
+#     if not os.path.isfile(image_path):
+#
+#         os.makedirs(cache_dir, mode=0o777, exist_ok=True)
+#
+#         status_code, buffer = get_image_buffer(image_source_url)
+#         logger.debug(buffer.read())
+#         if status_code == 200 and buffer is not None:
+#             logger.debug('Saving image to {}'.format(image_path))
+#             with open(image_path, 'wb') as image_file:
+#                 image_file.write(buffer.read())
+#                 logger.debug(image_file)
+#         else:
+#             logger.debug('response status_code {}'.format(status_code))
+#             return
+#
+#     cached_image_url_path = re.sub('<.+>', dataset_type, image_url_path[1:]) + '?image=' + image_basename
+#     logger.debug('cached_image_url_path: {}'.format(cached_image_url_path))
+#
+#     #return key
+#     return cached_image_url_path
+#
+#
 
 

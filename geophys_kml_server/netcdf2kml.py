@@ -604,7 +604,6 @@ class NetCDF2kmlConverter(object):
                     cache_image_file(dataset_type=self.dataset_type,
                                      image_basename=os.path.splitext(dataset_metadata_dict['netcdf_basename'])[0]+'.png',
                                      image_source_url=wms_url,
-                                     cache_dir=self.cache_dir
                                      )
                     )
                 logger.debug('wms_url: {}'.format(wms_url))

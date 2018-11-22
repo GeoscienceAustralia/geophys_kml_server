@@ -146,7 +146,7 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
     #
     image_dir = os.path.join(cache_dir, dataset_type)
     #logger.debug('image dir: {}'.format(image_dir))
-    image_path = os.path.join(cache_dir, image_basename)
+    image_path = os.path.join(image_dir, image_basename)
 
     # key = os.path.join(dataset_type, image_basename)
     #logger.debug('image_path: {}'.format(image_path))
@@ -176,16 +176,6 @@ def cache_image_file(dataset_type, image_basename, image_source_url, cache_dir):
         #s3_object.put(Body=buffer)
 
 
-
-    # if memcache and memcached_connection:
-    #     if memcached_connection.get(image_path) is None: #TODO: Determine whether we can check for object existence without retrieving it
-    #         status_code, buffer = get_image_buffer(image_source_url)
-    #         if status_code == 200 and buffer is not None:
-    #             logger.debug('Writing image to memcached with key {}'.format(image_path))
-    #             memcached_connection.set(image_path, buffer.read())
-    #         else:
-    #             logger.debug('response status_code {}'.format(status_code))
-    #             return
 
     if not os.path.isfile(image_path):
 

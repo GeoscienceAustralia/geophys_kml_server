@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-su -
-
 apt-get update
 apt install python3-pip
 
@@ -15,7 +13,7 @@ pip3 install netcdf4
 pip3 install scipy
 pip3 install numexpr
 pip3 install owslib
-install psycopg2-binary
+pip3 install psycopg2-binary
 pip3 install python3-memcached
 pip3 install boto
 pip3 install cottoncandy
@@ -84,45 +82,5 @@ echo "<VirtualHost *:80>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 " > /etc/apache2/sites-enabled/000-default.conf
-
-# Increase the upload and download limits in cottoncandy settings
-echo "access_key = False
-secret_key = False
-endpoint_url = https://s3.amazonaws.com/
-verbose_boto = False
-
-[basic]
-default_acl = authenticated-read
-default_bucket =
-mandatory_bucket_prefix =
-force_bucket_creation = False
-path_separator = /
-signature_version =
-
-[upload_settings]
-mpu_use_threshold = 2000
-mpu_chunksize = 1000
-dask_chunksize = 100
-min_mpu_size = 5
-max_put_size = 50000
-max_mpu_size_tb = 50
-max_mpu_parts = 100000
-
-[download_settings]
-mpd_use_threshold = 1000000
-mpd_chunksize = 100000
-
-[extensions]
-ccgroup = grp, ccg
-ccdataset = arr, dar, rarr, ccd
-
-[gdrive]
-secrets = client_secrets.json
-credentials = credentials.txt
-
-[encryption]
-method = AES
-key = False
-" > /root/.config/cottoncandy/options.cfg
 
 apachectl restart

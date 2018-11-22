@@ -34,12 +34,12 @@ import boto3
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-try:
-    import cottoncandy
-except Exception as e:
-    logger.warning('Unable to import cottoncandy. AWS-specific functionality will not be enabled: {}'.format(e))
-    cottoncandy = None
+import cottoncandy
+# try:
+#     import cottoncandy
+# except Exception as e:
+#     logger.warning('Unable to import cottoncandy. AWS-specific functionality will not be enabled: {}'.format(e))
+#     cottoncandy = None
 
 class NetCDF2kmlConverter(object):
     '''

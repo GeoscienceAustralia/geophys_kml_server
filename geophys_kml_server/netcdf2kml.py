@@ -79,7 +79,7 @@ class NetCDF2kmlConverter(object):
         for key, value in combined_settings.items():
             setattr(self, key, value)
 
-
+        logger.debug("Cottoncandy module: {}".format(cottoncandy))
         self.cci = cottoncandy.get_interface(self.s3_bucket_name, ACCESS_KEY=myvars["Access key ID"],
                                              SECRET_KEY=myvars["Secret access key"],
                                              endpoint_url="https://s3-ap-southeast-2.amazonaws.com")
